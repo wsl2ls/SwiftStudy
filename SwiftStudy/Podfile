@@ -1,0 +1,14 @@
+# Uncomment the next line to define a global platform for your project
+platform :ios, '10.0'
+
+target 'SwiftStudy' do
+  use_frameworks!
+  # 忽略引入库的所有警告
+  inhibit_all_warnings!
+  
+  pod 'SnapKit'
+  pod 'Alamofire', '~> 5.0.0-beta.6'
+  
+end
+
+
