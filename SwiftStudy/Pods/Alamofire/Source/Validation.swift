@@ -1,7 +1,7 @@
 //
 //  Validation.swift
 //
-//  Copyright (c) 2014-2018 Alamofire Software Foundation (http://alamofire.org/)
+//  Copyright (c) 2014 Alamofire Software Foundation (http://alamofire.org/)
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -30,8 +30,14 @@ extension Request {
 
     fileprivate typealias ErrorReason = AFError.ResponseValidationFailureReason
 
-    /// Used to represent whether a validation succeeded or failed.
-    public typealias ValidationResult = AFResult<Void>
+    /// Used to represent whether validation was successful or encountered an error resulting in a failure.
+    ///
+    /// - success: The validation was successful.
+    /// - failure: The validation failed encountering the provided error.
+    public enum ValidationResult {
+        case success
+        case failure(Error)
+    }
 
     fileprivate struct MIMEType {
         let type: String
@@ -42,7 +48,12 @@ extension Request {
         init?(_ string: String) {
             let components: [String] = {
                 let stripped = string.trimmingCharacters(in: .whitespacesAndNewlines)
+
+            #if swift(>=3.2)
                 let split = stripped[..<(stripped.range(of: ";")?.lowerBound ?? stripped.endIndex)]
+            #else
+                let split = stripped.substring(to: stripped.range(of: ";")?.lowerBound ?? stripped.endIndex)
+            #endif
 
                 return split.components(separatedBy: "/")
             }()
@@ -67,7 +78,7 @@ extension Request {
 
     // MARK: Properties
 
-    fileprivate var acceptableStatusCodes: Range<Int> { return 200..<300 }
+    fileprivate var acceptableStatusCodes: [Int] { return Array(200..<300) }
 
     fileprivate var acceptableContentTypes: [String] {
         if let accept = request?.value(forHTTPHeaderField: "Accept") {
@@ -86,7 +97,7 @@ extension Request {
         where S.Iterator.Element == Int
     {
         if acceptableStatusCodes.contains(response.statusCode) {
-            return .success(Void())
+            return .success
         } else {
             let reason: ErrorReason = .unacceptableStatusCode(code: response.statusCode)
             return .failure(AFError.responseValidationFailed(reason: reason))
@@ -102,7 +113,7 @@ extension Request {
         -> ValidationResult
         where S.Iterator.Element == String
     {
-        guard let data = data, data.count > 0 else { return .success(Void()) }
+        guard let data = data, data.count > 0 else { return .success }
 
         guard
             let responseContentType = response.mimeType,
@@ -110,7 +121,7 @@ extension Request {
         else {
             for contentType in acceptableContentTypes {
                 if let mimeType = MIMEType(contentType), mimeType.isWildcard {
-                    return .success(Void())
+                    return .success
                 }
             }
 
@@ -124,7 +135,7 @@ extension Request {
 
         for contentType in acceptableContentTypes {
             if let acceptableMIMEType = MIMEType(contentType), acceptableMIMEType.matches(responseMIMEType) {
-                return .success(Void())
+                return .success
             }
         }
 
@@ -148,6 +159,30 @@ extension DataRequest {
     /// request was valid.
     public typealias Validation = (URLRequest?, HTTPURLResponse, Data?) -> ValidationResult
 
+    /// Validates the request, using the specified closure.
+    ///
+    /// If validation fails, subsequent calls to response handlers will have an associated error.
+    ///
+    /// - parameter validation: A closure to validate the request.
+    ///
+    /// - returns: The request.
+    @discardableResult
+    public func validate(_ validation: @escaping Validation) -> Self {
+        let validationExecution: () -> Void = { [unowned self] in
+            if
+                let response = self.response,
+                self.delegate.error == nil,
+                case let .failure(error) = validation(self.request, response, self.delegate.data)
+            {
+                self.delegate.error = error
+            }
+        }
+
+        validations.append(validationExecution)
+
+        return self
+    }
+
     /// Validates that the response has a status code in the specified sequence.
     ///
     /// If validation fails, subsequent calls to response handlers will have an associated error.
@@ -170,9 +205,9 @@ extension DataRequest {
     ///
     /// - returns: The request.
     @discardableResult
-    public func validate<S: Sequence>(contentType acceptableContentTypes: @escaping @autoclosure () -> S) -> Self where S.Iterator.Element == String {
+    public func validate<S: Sequence>(contentType acceptableContentTypes: S) -> Self where S.Iterator.Element == String {
         return validate { [unowned self] _, response, data in
-            return self.validate(contentType: acceptableContentTypes(), response: response, data: data)
+            return self.validate(contentType: acceptableContentTypes, response: response, data: data)
         }
     }
 
@@ -184,10 +219,7 @@ extension DataRequest {
     /// - returns: The request.
     @discardableResult
     public func validate() -> Self {
-        let contentTypes: () -> [String] = { [unowned self] in
-            return self.acceptableContentTypes
-        }
-        return validate(statusCode: acceptableStatusCodes).validate(contentType: contentTypes())
+        return validate(statusCode: self.acceptableStatusCodes).validate(contentType: self.acceptableContentTypes)
     }
 }
 
@@ -199,8 +231,37 @@ extension DownloadRequest {
     public typealias Validation = (
         _ request: URLRequest?,
         _ response: HTTPURLResponse,
-        _ fileURL: URL?)
+        _ temporaryURL: URL?,
+        _ destinationURL: URL?)
         -> ValidationResult
+
+    /// Validates the request, using the specified closure.
+    ///
+    /// If validation fails, subsequent calls to response handlers will have an associated error.
+    ///
+    /// - parameter validation: A closure to validate the request.
+    ///
+    /// - returns: The request.
+    @discardableResult
+    public func validate(_ validation: @escaping Validation) -> Self {
+        let validationExecution: () -> Void = { [unowned self] in
+            let request = self.request
+            let temporaryURL = self.downloadDelegate.temporaryURL
+            let destinationURL = self.downloadDelegate.destinationURL
+
+            if
+                let response = self.response,
+                self.delegate.error == nil,
+                case let .failure(error) = validation(request, response, temporaryURL, destinationURL)
+            {
+                self.delegate.error = error
+            }
+        }
+
+        validations.append(validationExecution)
+
+        return self
+    }
 
     /// Validates that the response has a status code in the specified sequence.
     ///
@@ -211,7 +272,7 @@ extension DownloadRequest {
     /// - returns: The request.
     @discardableResult
     public func validate<S: Sequence>(statusCode acceptableStatusCodes: S) -> Self where S.Iterator.Element == Int {
-        return validate { [unowned self] (_, response, _) in
+        return validate { [unowned self] _, response, _, _ in
             return self.validate(statusCode: acceptableStatusCodes, response: response)
         }
     }
@@ -224,15 +285,17 @@ extension DownloadRequest {
     ///
     /// - returns: The request.
     @discardableResult
-    public func validate<S: Sequence>(contentType acceptableContentTypes: @escaping @autoclosure () -> S) -> Self where S.Iterator.Element == String {
-        return validate { [unowned self] (_, response, fileURL) in
+    public func validate<S: Sequence>(contentType acceptableContentTypes: S) -> Self where S.Iterator.Element == String {
+        return validate { [unowned self] _, response, _, _ in
+            let fileURL = self.downloadDelegate.fileURL
+
             guard let validFileURL = fileURL else {
                 return .failure(AFError.responseValidationFailed(reason: .dataFileNil))
             }
 
             do {
                 let data = try Data(contentsOf: validFileURL)
-                return self.validate(contentType: acceptableContentTypes(), response: response, data: data)
+                return self.validate(contentType: acceptableContentTypes, response: response, data: data)
             } catch {
                 return .failure(AFError.responseValidationFailed(reason: .dataFileReadFailed(at: validFileURL)))
             }
@@ -247,9 +310,6 @@ extension DownloadRequest {
     /// - returns: The request.
     @discardableResult
     public func validate() -> Self {
-        let contentTypes = { [unowned self] in
-            return self.acceptableContentTypes
-        }
-        return validate(statusCode: acceptableStatusCodes).validate(contentType: contentTypes())
+        return validate(statusCode: self.acceptableStatusCodes).validate(contentType: self.acceptableContentTypes)
     }
 }

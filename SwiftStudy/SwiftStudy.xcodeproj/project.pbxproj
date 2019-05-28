@@ -14,6 +14,7 @@
 		7842533B228CFC690055454C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 78425339228CFC690055454C /* LaunchScreen.storyboard */; };
 		78425346228CFC6A0055454C /* SwiftStudyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78425345228CFC6A0055454C /* SwiftStudyTests.swift */; };
 		78425351228CFC6A0055454C /* SwiftStudyUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78425350228CFC6A0055454C /* SwiftStudyUITests.swift */; };
+		786ACB5B229D169700E9DF72 /* placeholderImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 786ACB5A229D169700E9DF72 /* placeholderImage.png */; };
 		BB37ADF54BF3E0556A75AB41 /* Pods_SwiftStudy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF98F7E41776603C388BB02B /* Pods_SwiftStudy.framework */; };
 /* End PBXBuildFile section */
 
@@ -49,6 +50,7 @@
 		7842534C228CFC6A0055454C /* SwiftStudyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftStudyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		78425350228CFC6A0055454C /* SwiftStudyUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftStudyUITests.swift; sourceTree = "<group>"; };
 		78425352228CFC6A0055454C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		786ACB5A229D169700E9DF72 /* placeholderImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = placeholderImage.png; sourceTree = "<group>"; };
 		EF98F7E41776603C388BB02B /* Pods_SwiftStudy.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwiftStudy.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FD526B84FD9D1FD983A98597 /* Pods-SwiftStudy.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftStudy.release.xcconfig"; path = "Target Support Files/Pods-SwiftStudy/Pods-SwiftStudy.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -104,6 +106,7 @@
 		7842532F228CFC680055454C /* SwiftStudy */ = {
 			isa = PBXGroup;
 			children = (
+				786ACB59229D169700E9DF72 /* Resource */,
 				78425330228CFC680055454C /* AppDelegate.swift */,
 				78425332228CFC680055454C /* ViewController.swift */,
 				78425334228CFC680055454C /* Main.storyboard */,
@@ -132,6 +135,14 @@
 			path = SwiftStudyUITests;
 			sourceTree = "<group>";
 		};
+		786ACB59229D169700E9DF72 /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				786ACB5A229D169700E9DF72 /* placeholderImage.png */,
+			);
+			path = Resource;
+			sourceTree = "<group>";
+		};
 		C3921E159DCB1427D7520407 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -146,7 +157,6 @@
 				1A990E8A3F2AA8835666FD59 /* Pods-SwiftStudy.debug.xcconfig */,
 				FD526B84FD9D1FD983A98597 /* Pods-SwiftStudy.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -257,6 +267,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7842533B228CFC690055454C /* LaunchScreen.storyboard in Resources */,
+				786ACB5B229D169700E9DF72 /* placeholderImage.png in Resources */,
 				78425338228CFC690055454C /* Assets.xcassets in Resources */,
 				78425336228CFC680055454C /* Main.storyboard in Resources */,
 			);
@@ -311,6 +322,8 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SwiftStudy/Pods-SwiftStudy-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/AlamofireImage/AlamofireImage.framework",
+				"${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework",
 				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -318,6 +331,8 @@
 			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AlamofireImage.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Kingfisher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;

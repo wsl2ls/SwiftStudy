@@ -7,7 +7,9 @@ target 'SwiftStudy' do
   inhibit_all_warnings!
   
   pod 'SnapKit'
-  pod 'Alamofire', '~> 5.0.0-beta.6'
+  pod 'Alamofire', '~> 4.8'
+  pod 'AlamofireImage', '~> 3.5'
+  pod 'Kingfisher', '~> 5.5.0'
   
 end
 
