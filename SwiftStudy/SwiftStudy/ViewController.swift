@@ -12,6 +12,7 @@ import Alamofire
 import AlamofireImage
 import Kingfisher
 
+
 class ViewController: UIViewController {
     
     //懒加载
@@ -64,13 +65,13 @@ class ViewController: UIViewController {
         tableView.dataSource = self
         //        tableView.contentInsetAdjustmentBehavior = UIScrollView.ContentInsetAdjustmentBehavior.never
         //        tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cellId")
+        tableView.register(SLTableViewCell.self, forCellReuseIdentifier: "cellId")
         return tableView
     }
     
 }
 
-    // MARK: UITableViewDelegate, UITableViewDataSource
+// MARK: UITableViewDelegate, UITableViewDataSource
 extension ViewController : UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -79,7 +80,7 @@ extension ViewController : UITableViewDelegate, UITableViewDataSource {
         return 26
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100
+        return 15 + 35 + 15
     }
     func tableView(_ tableVdiew: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         return nil;
@@ -94,23 +95,25 @@ extension ViewController : UITableViewDelegate, UITableViewDataSource {
         return 0
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath);
-        cell.textLabel?.text = "hahah"
-        let url = URL(string: "https://httpbin.org/image/png")!
+        let cell:SLTableViewCell = tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath) as! SLTableViewCell
+        let url = URL(string: "http://b-ssl.duitang.com/uploads/item/201601/15/20160115140217_HeJAm.jpeg")!
         let placeholderImage = UIImage(named: "placeholderImage")!
-        let processor = DownsamplingImageProcessor(size: CGSize.init(width: 44, height: 44))
-            >> RoundCornerImageProcessor(cornerRadius: 20)
-        cell.imageView?.af_setImage(withURL: url, placeholderImage: placeholderImage)
-//        cell.imageView?.kf.setImage(with: url, placeholder: placeholderImage, options: [
-//            .processor(processor),
-//            .scaleFactor(UIScreen.main.scale),
-//            .transition(.fade(1)),
-//            .cacheOriginalImage
-//            ], progressBlock: { (p, k) in
-//
-//        }, completionHandler: { (Result<RetrieveImageResult1, KingfisherError>) in
-//
-//        })
+        //        let processor = DownsamplingImageProcessor(size: CGSize.init(width: 44, height: 44))
+        //            >> RoundCornerImageProcessor(cornerRadius: 20)
+        cell.headImage.af_setImage(withURL: url, placeholderImage: placeholderImage)
+        //        cell.imageView?.kf.setImage(with: url, placeholder: placeholderImage, options: [
+        //            .processor(processor),
+        //            .scaleFactor(UIScreen.main.scale),
+        //            .transition(.fade(1)),
+        //            .cacheOriginalImage
+        //            ], progressBlock: { (p, k) in
+        //
+        //        }, completionHandler: { (Result<RetrieveImageResult1, KingfisherError>) in
+        //
+        //        })
+        cell.nickLabel.text = "鸡汤"
+        cell.timeLabel.text = "05-28 15:51 来自 我的iPhone XS Max "
+        cell.followBtn.setTitle("      关注     ", for: UIControl.State.normal)
         return cell;
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
