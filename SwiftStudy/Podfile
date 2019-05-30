@@ -10,6 +10,7 @@ target 'SwiftStudy' do
   pod 'Alamofire', '~> 4.8'
   pod 'AlamofireImage', '~> 3.5'
   pod 'Kingfisher', '~> 5.5.0'
+  pod 'HandyJSON', '~> 5.0.0-beta.1'
   
 end
 

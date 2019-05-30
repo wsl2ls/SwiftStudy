@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SLTableViewCell: UITableViewCell {
+class SLTableViewCell: UITableViewCell{
     //头像
     lazy var headImage:UIImageView = {
         let headimage = UIImageView()
@@ -43,6 +43,16 @@ class SLTableViewCell: UITableViewCell {
         followBtn.setContentCompressionResistancePriority(UILayoutPriority.required, for: NSLayoutConstraint.Axis.horizontal)
         return followBtn
     }()
+    //标题
+    lazy var textView:UITextView = {
+        let textView = UITextView()
+        textView.textColor = UIColor.black;
+        textView.isEditable = false;
+        textView.isScrollEnabled = false;
+        textView.delegate = self
+//        textView.numberOfLines  = 0
+        return textView
+    }()
     
     //初始化
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -56,6 +66,7 @@ class SLTableViewCell: UITableViewCell {
         self.contentView.addSubview(self.nickLabel)
         self.contentView.addSubview(self.timeLabel)
         self.contentView.addSubview(self.followBtn)
+        self.contentView.addSubview(self.textView)
         self.headImage.snp.makeConstraints { (make) in
             make.left.equalToSuperview().offset(15)
             make.top.equalToSuperview().offset(15)
@@ -79,7 +90,42 @@ class SLTableViewCell: UITableViewCell {
             make.centerY.equalTo(self.headImage.snp.centerY)
             make.height.equalTo(24)
         }
+        self.textView.snp.makeConstraints { (make) in
+            make.left.equalTo(self.headImage.snp.left)
+            make.right.equalTo(self.followBtn.snp.right)
+            make.top.equalTo(self.headImage.snp.bottom).offset(15)
+            make.bottom.equalToSuperview().offset(-15)
+        }
     }
+    
+    // MARK: ReloadData
+    func configureCell(model:SLModel) -> Void {
+        let url = URL(string:model.headPic)
+        let placeholderImage = UIImage(named: "placeholderImage")!
+        //        let processor = DownsamplingImageProcessor(size: CGSize.init(width: 44, height: 44))
+        //            >> RoundCornerImageProcessor(cornerRadius: 20)
+        self.headImage.af_setImage(withURL: url!, placeholderImage: placeholderImage)
+        //        cell.imageView?.kf.setImage(with: url, placeholder: placeholderImage, options: [
+        //            .processor(processor),
+        //            .scaleFactor(UIScreen.main.scale),
+        //            .transition(.fade(1)),
+        //            .cacheOriginalImage
+        //            ], progressBlock: { (p, k) in
+        //
+        //        }, completionHandler: { (Result<RetrieveImageResult1, KingfisherError>) in
+        //
+        //        })
+        self.nickLabel.text = model.nickName
+        self.timeLabel.text =  model.time! + " 来自 " + model.source!
+        self.followBtn.setTitle("      关注     ", for: UIControl.State.normal)
+        self.textView.attributedText = model.title
+    }
+    
+//    func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
+//        //        var string = textView.text.substring(with: characterRange)
+//        print("点击了")
+//        return true
+//    }
     
     // MARK: Events
     @objc func followBtnClicked(followBtn:UIButton) {
@@ -99,3 +145,16 @@ class SLTableViewCell: UITableViewCell {
     }
     
 }
+
+extension SLTableViewCell : UITextViewDelegate {
+    func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
+//        var string = textView.text.substring(with: characterRange)
+        print("点击了链接 \(URL.absoluteString)")
+        return true
+    }
+    func textView(_ textView: UITextView, shouldInteractWith textAttachment: NSTextAttachment, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
+        print("点击了附件")
+        return true
+    }
+}
+

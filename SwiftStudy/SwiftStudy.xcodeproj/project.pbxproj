@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		78054520229FC9B800F7460A /* 爱你@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7805451E229FC9B700F7460A /* 爱你@2x.png */; };
+		78054521229FC9B800F7460A /* 爱你@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7805451F229FC9B700F7460A /* 爱你@3x.png */; };
+		78054523229FD15900F7460A /* photo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 78054522229FD15900F7460A /* photo@2x.png */; };
 		78425331228CFC680055454C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78425330228CFC680055454C /* AppDelegate.swift */; };
 		78425333228CFC680055454C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78425332228CFC680055454C /* ViewController.swift */; };
 		78425336228CFC680055454C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 78425334228CFC680055454C /* Main.storyboard */; };
@@ -38,6 +41,9 @@
 
 /* Begin PBXFileReference section */
 		1A990E8A3F2AA8835666FD59 /* Pods-SwiftStudy.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftStudy.debug.xcconfig"; path = "Target Support Files/Pods-SwiftStudy/Pods-SwiftStudy.debug.xcconfig"; sourceTree = "<group>"; };
+		7805451E229FC9B700F7460A /* 爱你@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "爱你@2x.png"; sourceTree = "<group>"; };
+		7805451F229FC9B700F7460A /* 爱你@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "爱你@3x.png"; sourceTree = "<group>"; };
+		78054522229FD15900F7460A /* photo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "photo@2x.png"; sourceTree = "<group>"; };
 		7842532D228CFC680055454C /* SwiftStudy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftStudy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		78425330228CFC680055454C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		78425332228CFC680055454C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -142,6 +148,9 @@
 			isa = PBXGroup;
 			children = (
 				786ACB5A229D169700E9DF72 /* placeholderImage.png */,
+				7805451E229FC9B700F7460A /* 爱你@2x.png */,
+				7805451F229FC9B700F7460A /* 爱你@3x.png */,
+				78054522229FD15900F7460A /* photo@2x.png */,
 			);
 			path = Resource;
 			sourceTree = "<group>";
@@ -273,6 +282,9 @@
 				786ACB5B229D169700E9DF72 /* placeholderImage.png in Resources */,
 				78425338228CFC690055454C /* Assets.xcassets in Resources */,
 				78425336228CFC680055454C /* Main.storyboard in Resources */,
+				78054521229FC9B800F7460A /* 爱你@3x.png in Resources */,
+				78054520229FC9B800F7460A /* 爱你@2x.png in Resources */,
+				78054523229FD15900F7460A /* photo@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -326,6 +338,7 @@
 				"${PODS_ROOT}/Target Support Files/Pods-SwiftStudy/Pods-SwiftStudy-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/AlamofireImage/AlamofireImage.framework",
+				"${BUILT_PRODUCTS_DIR}/HandyJSON/HandyJSON.framework",
 				"${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework",
 				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
 			);
@@ -335,6 +348,7 @@
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AlamofireImage.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/HandyJSON.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Kingfisher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
 			);
