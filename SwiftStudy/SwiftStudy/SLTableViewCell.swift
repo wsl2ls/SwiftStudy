@@ -8,6 +8,26 @@
 
 import UIKit
 
+//标题富文本视图
+class SLTextView: UITextView {
+    //关闭高亮富文本的长按选中功能
+    override func addGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer) {
+        if gestureRecognizer is  UILongPressGestureRecognizer {
+            gestureRecognizer.isEnabled = false;
+        }
+        super.addGestureRecognizer(gestureRecognizer)
+    }
+    //打开或禁用复制，剪切，选择，全选等功能 UIMenuController
+    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        // 返回false为禁用，true为开启
+        if action == #selector(copy(_ :)) || action == #selector(selectAll(_ :)) || action == #selector(select(_ :)) {
+            return true
+        }
+        //        print("\(action)")
+        return false
+    }
+}
+
 class SLTableViewCell: UITableViewCell{
     //头像
     lazy var headImage:UIImageView = {
@@ -20,14 +40,14 @@ class SLTableViewCell: UITableViewCell{
     lazy var nickLabel:UILabel = {
         let nickName = UILabel()
         nickName.textColor = UIColor.black;
-        nickName.font = UIFont.systemFont(ofSize: 14)
+        nickName.font = UIFont.systemFont(ofSize: 16)
         return nickName
     }()
     //时间和来源
     lazy var timeLabel:UILabel = {
         let timeLabel = UILabel()
         timeLabel.textColor = UIColor.gray;
-        timeLabel.font = UIFont.systemFont(ofSize: 10)
+        timeLabel.font = UIFont.systemFont(ofSize: 12)
         return timeLabel
     }()
     //关注
@@ -37,20 +57,24 @@ class SLTableViewCell: UITableViewCell{
         followBtn.layer.borderWidth = 0.5
         followBtn.layer.cornerRadius = 12
         followBtn.clipsToBounds = true
-        followBtn.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+        followBtn.titleLabel?.font = UIFont.systemFont(ofSize: 14)
         followBtn.setTitleColor(UIColor.init(red: 58/256.0, green: 164/256.0, blue: 240/256.0, alpha: 1.0), for: UIControl.State.normal)
         followBtn.addTarget(self, action: #selector(followBtnClicked(followBtn:)), for: UIControl.Event.touchUpInside)
         followBtn.setContentCompressionResistancePriority(UILayoutPriority.required, for: NSLayoutConstraint.Axis.horizontal)
         return followBtn
     }()
     //标题
-    lazy var textView:UITextView = {
-        let textView = UITextView()
+    lazy var textView:SLTextView = {
+        let textView = SLTextView()
         textView.textColor = UIColor.black;
         textView.isEditable = false;
         textView.isScrollEnabled = false;
         textView.delegate = self
-//        textView.numberOfLines  = 0
+//        textView.backgroundColor = UIColor.green
+        //内容距离行首和行尾的内边距
+        textView.textContainer.lineFragmentPadding = 0
+        textView.textContainerInset = UIEdgeInsets.zero
+//        textView.max
         return textView
     }()
     
@@ -99,7 +123,7 @@ class SLTableViewCell: UITableViewCell{
     }
     
     // MARK: ReloadData
-    func configureCell(model:SLModel) -> Void {
+    func configureCell(model:SLModel, layout:SLLayout?) -> Void {
         let url = URL(string:model.headPic)
         let placeholderImage = UIImage(named: "placeholderImage")!
         //        let processor = DownsamplingImageProcessor(size: CGSize.init(width: 44, height: 44))
@@ -118,14 +142,8 @@ class SLTableViewCell: UITableViewCell{
         self.nickLabel.text = model.nickName
         self.timeLabel.text =  model.time! + " 来自 " + model.source!
         self.followBtn.setTitle("      关注     ", for: UIControl.State.normal)
-        self.textView.attributedText = model.title
+        self.textView.attributedText = layout?.attributedString
     }
-    
-//    func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
-//        //        var string = textView.text.substring(with: characterRange)
-//        print("点击了")
-//        return true
-//    }
     
     // MARK: Events
     @objc func followBtnClicked(followBtn:UIButton) {
@@ -146,15 +164,17 @@ class SLTableViewCell: UITableViewCell{
     
 }
 
+// MARK: UITextViewDelegate
 extension SLTableViewCell : UITextViewDelegate {
+    //点击链接
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
-//        var string = textView.text.substring(with: characterRange)
-        print("点击了链接 \(URL.absoluteString)")
-        return true
+        print("点击了：\(textView.attributedText.attributedSubstring(from: characterRange).string) \n    链接值：\(URL.absoluteString) ")
+        return false
     }
+    //点击富文本附件 图片等
     func textView(_ textView: UITextView, shouldInteractWith textAttachment: NSTextAttachment, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
-        print("点击了附件")
-        return true
+        print("点击了附件\( NSAttributedString(attachment: textAttachment).string) ")
+        return false
     }
 }
 

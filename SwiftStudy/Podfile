@@ -11,6 +11,7 @@ target 'SwiftStudy' do
   pod 'AlamofireImage', '~> 3.5'
   pod 'Kingfisher', '~> 5.5.0'
   pod 'HandyJSON', '~> 5.0.0-beta.1'
+  pod 'GDPerformanceView-Swift', '~> 2.0.2'
   
 end
 
