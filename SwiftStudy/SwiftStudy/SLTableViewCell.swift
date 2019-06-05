@@ -8,6 +8,11 @@
 
 import UIKit
 
+//代理方法
+protocol SLTableViewCellDelegate : NSObjectProtocol{
+    func fullTextAction(characterRange: NSRange, indexPath: IndexPath)
+}
+
 //标题富文本视图
 class SLTextView: UITextView {
     //关闭高亮富文本的长按选中功能
@@ -29,29 +34,33 @@ class SLTextView: UITextView {
 }
 
 class SLTableViewCell: UITableViewCell{
+    
+    var cellIndexPath: IndexPath?
+    // 代理
+    weak var delegate: SLTableViewCellDelegate?
     //头像
-    lazy var headImage:UIImageView = {
+    lazy var headImage: UIImageView = {
         let headimage = UIImageView()
         headimage.layer.cornerRadius = 15
         headimage.clipsToBounds = true
         return headimage
     }()
     //昵称
-    lazy var nickLabel:UILabel = {
+    lazy var nickLabel: UILabel = {
         let nickName = UILabel()
         nickName.textColor = UIColor.black;
         nickName.font = UIFont.systemFont(ofSize: 16)
         return nickName
     }()
     //时间和来源
-    lazy var timeLabel:UILabel = {
+    lazy var timeLabel: UILabel = {
         let timeLabel = UILabel()
         timeLabel.textColor = UIColor.gray;
         timeLabel.font = UIFont.systemFont(ofSize: 12)
         return timeLabel
     }()
     //关注
-    lazy var followBtn:UIButton = {
+    lazy var followBtn: UIButton = {
         let followBtn = UIButton()
         followBtn.layer.borderColor = UIColor.init(red: 58/256.0, green: 164/256.0, blue: 240/256.0, alpha: 1.0).cgColor
         followBtn.layer.borderWidth = 0.5
@@ -64,17 +73,17 @@ class SLTableViewCell: UITableViewCell{
         return followBtn
     }()
     //标题
-    lazy var textView:SLTextView = {
+    lazy var textView: SLTextView = {
         let textView = SLTextView()
         textView.textColor = UIColor.black;
         textView.isEditable = false;
         textView.isScrollEnabled = false;
         textView.delegate = self
-//        textView.backgroundColor = UIColor.green
+        //        textView.backgroundColor = UIColor.green
         //内容距离行首和行尾的内边距
         textView.textContainer.lineFragmentPadding = 0
         textView.textContainerInset = UIEdgeInsets.zero
-//        textView.max
+        //        textView.max
         return textView
     }()
     
@@ -123,7 +132,7 @@ class SLTableViewCell: UITableViewCell{
     }
     
     // MARK: ReloadData
-    func configureCell(model:SLModel, layout:SLLayout?) -> Void {
+    func configureCell(model: SLModel, layout: SLLayout?) -> Void {
         let url = URL(string:model.headPic)
         let placeholderImage = UIImage(named: "placeholderImage")!
         //        let processor = DownsamplingImageProcessor(size: CGSize.init(width: 44, height: 44))
@@ -146,7 +155,7 @@ class SLTableViewCell: UITableViewCell{
     }
     
     // MARK: Events
-    @objc func followBtnClicked(followBtn:UIButton) {
+    @objc func followBtnClicked(followBtn: UIButton) {
         print("已关注")
     }
     
@@ -161,7 +170,6 @@ class SLTableViewCell: UITableViewCell{
         super.setSelected(selected, animated: animated)
         // Configure the view for the selected state
     }
-    
 }
 
 // MARK: UITextViewDelegate
@@ -169,6 +177,9 @@ extension SLTableViewCell : UITextViewDelegate {
     //点击链接
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
         print("点击了：\(textView.attributedText.attributedSubstring(from: characterRange).string) \n    链接值：\(URL.absoluteString) ")
+        if URL.absoluteString == "FullText" {
+            self.delegate?.fullTextAction(characterRange: characterRange, indexPath: self.cellIndexPath!)
+        }
         return false
     }
     //点击富文本附件 图片等
