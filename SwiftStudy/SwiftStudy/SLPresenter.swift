@@ -61,7 +61,7 @@ class SLPresenter: NSObject{
         DispatchQueue.global(qos: .default).async {
             //处理耗时操作的代码块...
             for _ in 1...20 {
-                let model = SLModel(headPic: "http://b-ssl.duitang.com/uploads/item/201601/15/20160115140217_HeJAm.jpeg", nickName: "鸡汤", time: "05-28 15:51", source: "我的iPhone XS Max ", title: " @wsl2ls: 不要迷恋哥，哥只是一个传说 https://github.com/wsl2ls // @蜜桃君🏀: 🦆你真的太帅了[爱你] https://github.com/wsl2ls // @且行且珍惜_iOS: 发起了话题#我是一只帅哥#不信点我看看 https://www.jianshu.com/u/e15d1f644bea")
+                let model = SLModel(headPic: "http://b-ssl.duitang.com/uploads/item/201601/15/20160115140217_HeJAm.jpeg", nickName: "鸡汤", time: "05-28 15:51", source: "我的iPhone XS Max ", title: " @wsl2ls: 不要迷恋哥，哥只是一个传说 https://github.com/wsl2ls, 是终将要成为#海贼王#的男人！// @蜜桃君🏀: 🦆你真的太帅了[爱你] https://github.com/wsl2ls // @且行且珍惜_iOS: 发起了话题#我是一只帅哥#不信点我看看 https://www.jianshu.com/u/e15d1f644bea , 相信我，不会让你失望滴")
                 self.dataArray.add(model)
                 //元组
                 let attStrAndHeight:(attributedString:NSMutableAttributedString, height:CGFloat) = self.matchesResultOfTitle(title: model.title!, expan: false)
@@ -153,14 +153,14 @@ class SLPresenter: NSObject{
         if attributedString.length > cutoffLocation {
             var fullText: NSMutableAttributedString
             if expan {
-                fullText = NSMutableAttributedString(string:"\n收起")
-                fullText.addAttributes([NSAttributedString.Key.link :"FullText"], range: NSRange(location:1, length:2))
+                attributedString.append(NSAttributedString(string:"\n"))
+                fullText = NSMutableAttributedString(string:"收起")
             }else {
                 attributedString = attributedString.attributedSubstring(from: NSRange(location: 0, length: cutoffLocation)) as! NSMutableAttributedString
-                fullText = NSMutableAttributedString(string:"...全文")
-                fullText.addAttributes([NSAttributedString.Key.link :"FullText"], range: NSRange(location: 3, length:2))
+                attributedString.append(NSAttributedString(string:"..."))
+                fullText = NSMutableAttributedString(string:"全文")
             }
-            fullText.addAttribute(NSAttributedString.Key.font, value: UIFont.systemFont(ofSize: 16), range: NSRange(location: 0, length:fullText.length))
+            fullText.addAttributes([NSAttributedString.Key.link :"FullText", NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16)], range: NSRange(location:0, length:fullText.length))
             attributedString.append(fullText)
         }
         //元组
