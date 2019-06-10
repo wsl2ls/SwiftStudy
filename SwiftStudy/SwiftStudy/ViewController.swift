@@ -23,6 +23,9 @@ class ViewController: UIViewController {
         tableView.dataSource = self
         //        tableView.contentInsetAdjustmentBehavior = UIScrollView.ContentInsetAdjustmentBehavior.never
         //        tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
+        tableView.estimatedRowHeight = 0
+//        tableView.estimatedSectionFooterHeight = 0
+//        tableView.estimatedSectionHeaderHeight = 0
         tableView.register(SLTableViewCell.self, forCellReuseIdentifier: "cellId")
         return tableView
     }()

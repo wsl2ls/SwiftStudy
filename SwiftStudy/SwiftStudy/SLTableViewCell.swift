@@ -35,9 +35,6 @@ class SLTextView: UITextView {
 
 class SLTableViewCell: UITableViewCell{
     
-    var cellIndexPath: IndexPath?
-    // 代理
-    weak var delegate: SLTableViewCellDelegate?
     //头像
     lazy var headImage: UIImageView = {
         let headimage = UIImageView()
@@ -86,6 +83,12 @@ class SLTableViewCell: UITableViewCell{
         //        textView.max
         return textView
     }()
+    //图片视图数组
+    var picsArray: [UIImageView] = []
+    //当前cell索引
+    var cellIndexPath: IndexPath?
+    // 代理
+    weak var delegate: SLTableViewCellDelegate?
     
     //初始化
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -100,6 +103,13 @@ class SLTableViewCell: UITableViewCell{
         self.contentView.addSubview(self.timeLabel)
         self.contentView.addSubview(self.followBtn)
         self.contentView.addSubview(self.textView)
+        for _ in 0..<9 {
+            let imageView = UIImageView(frame: CGRect.zero)
+            imageView.isHidden = true
+            imageView.isUserInteractionEnabled = true
+            self.contentView.addSubview(imageView)
+            self.picsArray.append(imageView)
+        }
         self.headImage.snp.makeConstraints { (make) in
             make.left.equalToSuperview().offset(15)
             make.top.equalToSuperview().offset(15)
@@ -127,8 +137,9 @@ class SLTableViewCell: UITableViewCell{
             make.left.equalTo(self.headImage.snp.left)
             make.right.equalTo(self.followBtn.snp.right)
             make.top.equalTo(self.headImage.snp.bottom).offset(15)
-            make.bottom.equalToSuperview().offset(-15)
+            //            make.bottom.equalTo(self.picsArray[0].snp.top).offset(-15)
         }
+        
     }
     
     // MARK: ReloadData
@@ -152,6 +163,26 @@ class SLTableViewCell: UITableViewCell{
         self.timeLabel.text =  model.time! + " 来自 " + model.source!
         self.followBtn.setTitle("      关注     ", for: UIControl.State.normal)
         self.textView.attributedText = layout?.attributedString
+        
+        for (index, imageView) in self.picsArray.enumerated() {
+            if model.images.count > index {
+                imageView.isHidden = false
+                let width = (UIScreen.main.bounds.size.width - 15 * 2 - 5 * 2)/3
+                imageView.snp.remakeConstraints { (make) in
+                    make.top.equalTo(self.textView.snp.bottom).offset(15 + (index/3) * Int(width + 5))
+                    make.left.equalTo(15 + (index%3) * Int(width + 5))
+                    make.width.height.equalTo(width)
+                }
+                let imageUrl = URL(string:model.images[index])
+                imageView.af_setImage(withURL: imageUrl!, placeholderImage: placeholderImage)
+            } else {
+                imageView.isHidden = true
+                imageView.snp.remakeConstraints { (make) in
+                    make.top.left.width.height.equalTo(0)
+                }
+            }
+        }
+        
     }
     
     // MARK: Events
@@ -180,12 +211,12 @@ extension SLTableViewCell : UITextViewDelegate {
         if URL.absoluteString == "FullText" {
             self.delegate?.fullTextAction(characterRange: characterRange, indexPath: self.cellIndexPath!)
         }
-        return false
+        return true
     }
     //点击富文本附件 图片等
     func textView(_ textView: UITextView, shouldInteractWith textAttachment: NSTextAttachment, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
         print("点击了附件\( NSAttributedString(attachment: textAttachment).string) ")
-        return false
+        return true
     }
 }
 

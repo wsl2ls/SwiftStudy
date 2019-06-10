@@ -15,6 +15,7 @@ struct SLModel {
     var time: String?
     var source: String?
     var title: String?
+    var images: [String] = []
 }
 // 布局信息
 struct SLLayout {
@@ -29,7 +30,7 @@ let KRegularMatcheTopic = "#[^#]+#"    // 话题匹配 #话题#
 let KRegularMatcheUser = "@[\\u4e00-\\u9fa5a-zA-Z0-9_-]*"  // @用户匹配
 let KRegularMatcheEmotion = "\\[[^ \\[\\]]+?\\]"   //表情匹配 [爱心]
 
-let KTitleLengthMax = 80  // 默认标题最多字符个数，但不固定，取决于高亮的字符是否会被截断
+let KTitleLengthMax = 99  // 默认标题最多字符个数，但不固定，取决于高亮的字符是否会被截断
 typealias SLGetDataCompleteBlock = (_ dataArray: NSMutableArray, _ layoutArray: NSMutableArray) ->Void
 
 class SLPresenter: NSObject{
@@ -61,11 +62,19 @@ class SLPresenter: NSObject{
         DispatchQueue.global(qos: .default).async {
             //处理耗时操作的代码块...
             for _ in 1...20 {
-                let model = SLModel(headPic: "http://b-ssl.duitang.com/uploads/item/201601/15/20160115140217_HeJAm.jpeg", nickName: "鸡汤", time: "05-28 15:51", source: "我的iPhone XS Max ", title: " @wsl2ls: 不要迷恋哥，哥只是一个传说 https://github.com/wsl2ls, 是终将要成为#海贼王#的男人！// @蜜桃君🏀: 🦆你真的太帅了[爱你] https://github.com/wsl2ls // @且行且珍惜_iOS: 发起了话题#我是一只帅哥#不信点我看看 https://www.jianshu.com/u/e15d1f644bea , 相信我，不会让你失望滴")
+                var model = SLModel()
+                model.headPic = "http://b-ssl.duitang.com/uploads/item/201601/15/20160115140217_HeJAm.jpeg"
+                model.nickName = "鸡汤"
+                model.time = "05-28 15:51"
+                model.source = "我的iPhone XS Max "
+                model.title = " @wsl2ls: 不要迷恋哥，哥只是一个传说 https://github.com/wsl2ls, 是终将要成为#海贼王#的男人！// @蜜桃君🏀: 🦆你真的太帅了[爱你] https://github.com/wsl2ls // @且行且珍惜_iOS: 发起了话题#我是一只帅哥#不信点我看看 https://www.jianshu.com/u/e15d1f644bea , 相信我，不会让你失望滴"
+                for _ in 0...arc4random()%9 {
+                    model.images.append("http://cdn.duitang.com/uploads/item/201512/14/20151214144901_jshKA.thumb.700_0.jpeg")
+                }
                 self.dataArray.add(model)
                 //元组
                 let attStrAndHeight:(attributedString:NSMutableAttributedString, height:CGFloat) = self.matchesResultOfTitle(title: model.title!, expan: false)
-                let layout:SLLayout = SLLayout(attributedString: attStrAndHeight.attributedString, cellHeight: (15 + 35 + 15 + attStrAndHeight.height + 15), expan: false)
+                let layout:SLLayout = SLLayout(attributedString: attStrAndHeight.attributedString, cellHeight: (15 + 35 + 15 + attStrAndHeight.height + 15 + self.heightOfImages(images: model.images)), expan: false)
                 self.layoutArray.add(layout)
             }
             //操作完成，调用主线程来刷新界面
@@ -185,6 +194,16 @@ class SLPresenter: NSObject{
         let height : CGFloat =  attributedString.boundingRect(with: CGSize(width: UIScreen.main.bounds.size.width - 15 * 2, height: CGFloat(MAXFLOAT)), options: [.usesLineFragmentOrigin, .usesFontLeading], context: nil).height
         return ceil(height)
     }
+    //图组的高度
+    func heightOfImages(images:[String]) -> CGFloat {
+        if images.count == 0 {
+            return 0
+        } else {
+            let picHeight = (UIScreen.main.bounds.size.width - 15 * 2 - 5 * 2)/3
+            let height = ((images.count - 1)/3 + 1) * Int(picHeight) + (images.count - 1)/3 * 5 + 15
+            return CGFloat(height);
+        }
+    }
 }
 
 // MARK: SLTableViewCellDelegate
@@ -197,7 +216,7 @@ extension SLPresenter : SLTableViewCellDelegate {
         //元组
         let attStrAndHeight:(attributedString:NSMutableAttributedString, height:CGFloat) = self.matchesResultOfTitle(title: model.title!, expan: layout.expan)
         layout.attributedString = attStrAndHeight.attributedString
-        layout.cellHeight = (15 + 35 + 15 + attStrAndHeight.height + 15)
+        layout.cellHeight = (15 + 35 + 15 + attStrAndHeight.height + 15 + self.heightOfImages(images: model.images))
         self.layoutArray.replaceObject(at: indexPath.row, with: layout)
         self.completeBlock!(self.dataArray, self.layoutArray)
     }
