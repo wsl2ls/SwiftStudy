@@ -3,7 +3,7 @@
 //  SwiftStudy
 //
 //  Created by wsl on 2019/5/16.
-//  Copyright © 2019 wsl. All rights reserved.
+//  Copyright © 2019 https://github.com/wsl2ls All rights reserved.
 //
 
 import UIKit

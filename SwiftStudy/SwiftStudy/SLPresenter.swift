@@ -3,7 +3,7 @@
 //  SwiftStudy
 //
 //  Created by wsl on 2019/6/5.
-//  Copyright © 2019 wsl. All rights reserved.
+//  Copyright © 2019 https://github.com/wsl2ls All rights reserved.
 //
 
 import UIKit
@@ -31,18 +31,22 @@ let KRegularMatcheUser = "@[\\u4e00-\\u9fa5a-zA-Z0-9_-]*"  // @用户匹配
 let KRegularMatcheEmotion = "\\[[^ \\[\\]]+?\\]"   //表情匹配 [爱心]
 
 let KTitleLengthMax = 99  // 默认标题最多字符个数，但不固定，取决于高亮的字符是否会被截断
+//数据请求完毕的回调Block
 typealias SLGetDataCompleteBlock = (_ dataArray: NSMutableArray, _ layoutArray: NSMutableArray) ->Void
+//标题全文点击回调
+typealias SLFullTextCompleteBlock = (_ indexPath: IndexPath) ->Void
 
 class SLPresenter: NSObject{
     
     var dataArray = NSMutableArray()
     var layoutArray = NSMutableArray()
-    var completeBlock: SLGetDataCompleteBlock?
+    //    var completeBlock: SLGetDataCompleteBlock?
+    var fullTextBlock: SLFullTextCompleteBlock?
     
     // MARK: Data
     // @escaping 防止该参数在当前函数执行完成后释放，常用在异步操作中
     func getData(completeBlock: @escaping SLGetDataCompleteBlock) {
-        self.completeBlock = completeBlock
+        //        self.completeBlock = completeBlock
         //        let parameters: [String:String] = ["iid": "17769976909","device_id": "41312231473","count": "15","category": "weitoutiao"]
         //        AF.request("https://is.snssdk.com/api/news/feed/v54/?", method: .get, parameters: parameters, encoder: JSONEncoding.default as! ParameterEncoder, headers: HTTPHeaders(), interceptor: nil).responseJSON { (response) in
         //            //            print("Request: \(String(describing: response.request))")   // original url request
@@ -218,7 +222,7 @@ extension SLPresenter : SLTableViewCellDelegate {
         layout.attributedString = attStrAndHeight.attributedString
         layout.cellHeight = (15 + 35 + 15 + attStrAndHeight.height + 15 + self.heightOfImages(images: model.images))
         self.layoutArray.replaceObject(at: indexPath.row, with: layout)
-        self.completeBlock!(self.dataArray, self.layoutArray)
+        self.fullTextBlock!(indexPath)
     }
 }
 

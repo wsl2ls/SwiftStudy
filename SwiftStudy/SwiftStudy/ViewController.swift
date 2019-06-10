@@ -3,7 +3,7 @@
 //  SwiftStudy
 //
 //  Created by wsl on 2019/5/16.
-//  Copyright © 2019 wsl. All rights reserved.
+//  Copyright © 2019 https://github.com/wsl2ls All rights reserved.
 //
 
 import UIKit
@@ -24,8 +24,8 @@ class ViewController: UIViewController {
         //        tableView.contentInsetAdjustmentBehavior = UIScrollView.ContentInsetAdjustmentBehavior.never
         //        tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
         tableView.estimatedRowHeight = 0
-//        tableView.estimatedSectionFooterHeight = 0
-//        tableView.estimatedSectionHeaderHeight = 0
+        //        tableView.estimatedSectionFooterHeight = 0
+        //        tableView.estimatedSectionHeaderHeight = 0
         tableView.register(SLTableViewCell.self, forCellReuseIdentifier: "cellId")
         return tableView
     }()
@@ -47,6 +47,9 @@ class ViewController: UIViewController {
             self.dataArray = dataArray
             self.layoutArray = layoutArray
             self.tableView.reloadData()
+        }
+        self.presenter.fullTextBlock = { (indexPath) in
+            self.tableView.reloadRows(at: [indexPath], with: UITableView.RowAnimation.none)
         }
         setupUI()
     }
