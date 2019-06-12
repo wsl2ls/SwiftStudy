@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
-    <device id="retina6_1" orientation="portrait">
+    <device id="retina5_9" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -15,23 +15,17 @@
             <objects>
                 <viewController id="01J-lp-oVM" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Swift Study" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GGS-nz-veW">
-                                <rect key="frame" x="0.0" y="365" width="414" height="167"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="167" id="LIV-BL-5cP"/>
-                                </constraints>
+                                <rect key="frame" x="0.0" y="365" width="375" height="41"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="34"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Copyright © 2019 wsl. All rights reserved." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pHW-1E-9yC">
-                                <rect key="frame" x="0.0" y="785" width="414" height="21.5"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="21.5" id="wue-bf-6os"/>
-                                </constraints>
+                                <rect key="frame" x="0.0" y="746" width="375" height="22"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -39,14 +33,12 @@
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="pHW-1E-9yC" firstAttribute="top" secondItem="GGS-nz-veW" secondAttribute="bottom" constant="253" id="IJ1-Fe-WSE"/>
-                            <constraint firstItem="pHW-1E-9yC" firstAttribute="top" secondItem="GGS-nz-veW" secondAttribute="bottom" constant="253" id="Tqd-zS-q6G"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="pHW-1E-9yC" secondAttribute="bottom" constant="55.5" id="W2C-AW-qjQ"/>
-                            <constraint firstItem="pHW-1E-9yC" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="WXR-Mr-Cju"/>
-                            <constraint firstItem="GGS-nz-veW" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="cja-mm-1WZ"/>
-                            <constraint firstItem="GGS-nz-veW" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="321" id="kOV-Pg-GiZ"/>
-                            <constraint firstItem="GGS-nz-veW" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="lsR-TU-rR8"/>
-                            <constraint firstItem="pHW-1E-9yC" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="oZa-gC-97b"/>
+                            <constraint firstItem="GGS-nz-veW" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="CXy-Qp-T92"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="pHW-1E-9yC" secondAttribute="bottom" constant="10" id="LPu-Ja-KuP"/>
+                            <constraint firstAttribute="trailing" secondItem="GGS-nz-veW" secondAttribute="trailing" id="MXp-qI-4lG"/>
+                            <constraint firstItem="GGS-nz-veW" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="321" id="Q0l-9R-2eF"/>
+                            <constraint firstItem="GGS-nz-veW" firstAttribute="leading" secondItem="pHW-1E-9yC" secondAttribute="leading" id="eod-3W-CNc"/>
+                            <constraint firstItem="GGS-nz-veW" firstAttribute="trailing" secondItem="pHW-1E-9yC" secondAttribute="trailing" id="om1-s6-6jm"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>

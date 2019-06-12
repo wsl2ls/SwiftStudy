@@ -7,9 +7,10 @@
 //
 
 import UIKit
+import Kingfisher
 
 //代理方法
-protocol SLTableViewCellDelegate : NSObjectProtocol{
+protocol SLTableViewCellDelegate : NSObjectProtocol {
     func fullTextAction(characterRange: NSRange, indexPath: IndexPath)
 }
 
@@ -33,13 +34,13 @@ class SLTextView: UITextView {
     }
 }
 
-class SLTableViewCell: UITableViewCell{
+class SLTableViewCell: UITableViewCell {
     
     //头像
     lazy var headImage: UIImageView = {
         let headimage = UIImageView()
-        headimage.layer.cornerRadius = 15
-        headimage.clipsToBounds = true
+        //                headimage.layer.cornerRadius = 15
+        //                headimage.clipsToBounds = true
         return headimage
     }()
     //昵称
@@ -146,19 +147,9 @@ class SLTableViewCell: UITableViewCell{
     func configureCell(model: SLModel, layout: SLLayout?) -> Void {
         let url = URL(string:model.headPic)
         let placeholderImage = UIImage(named: "placeholderImage")!
-        //        let processor = DownsamplingImageProcessor(size: CGSize.init(width: 44, height: 44))
-        //            >> RoundCornerImageProcessor(cornerRadius: 20)
         self.headImage.af_setImage(withURL: url!, placeholderImage: placeholderImage)
-        //        cell.imageView?.kf.setImage(with: url, placeholder: placeholderImage, options: [
-        //            .processor(processor),
-        //            .scaleFactor(UIScreen.main.scale),
-        //            .transition(.fade(1)),
-        //            .cacheOriginalImage
-        //            ], progressBlock: { (p, k) in
-        //
-        //        }, completionHandler: { (Result<RetrieveImageResult1, KingfisherError>) in
-        //
-        //        })
+        let processor = RoundCornerImageProcessor(cornerRadius: 20)
+        //        self.headImage.kf.setImage(with: url!, options: [.processor(processor)])
         self.nickLabel.text = model.nickName
         self.timeLabel.text =  model.time! + " 来自 " + model.source!
         self.followBtn.setTitle("      关注     ", for: UIControl.State.normal)
@@ -173,8 +164,25 @@ class SLTableViewCell: UITableViewCell{
                     make.left.equalTo(15 + (index%3) * Int(width + 5))
                     make.width.height.equalTo(width)
                 }
-                let imageUrl = URL(string:model.images[index])
-                imageView.af_setImage(withURL: imageUrl!, placeholderImage: placeholderImage)
+                //URL编码
+                let encodingStr = model.images[index].addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+                let imageUrl = URL(string:encodingStr!)
+                imageView.clipsToBounds = true
+                imageView.kf.indicatorType = .activity
+                imageView.kf.setImage(
+                    with: imageUrl!,
+                    placeholder: placeholderImage,
+                    options: [.processor(processor), .transition(.fade(1)), .loadDiskFileSynchronously],
+                    progressBlock: { receivedSize, totalSize in
+                        //                        print("\(receivedSize)/\(totalSize)")
+                },
+                    completionHandler: { result in
+                        //                        print(result)
+                        //                        print("Finished")
+                }
+                )
+                imageView.contentMode = UIView.ContentMode.scaleToFill
+                imageView.layer.contentsRect = CGRect(x: 0, y: 0, width: 1, height: 0.6)
             } else {
                 imageView.isHidden = true
                 imageView.snp.remakeConstraints { (make) in

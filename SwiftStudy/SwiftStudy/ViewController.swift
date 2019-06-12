@@ -10,9 +10,8 @@ import UIKit
 import SnapKit
 import Alamofire
 import AlamofireImage
-import Kingfisher
-import HandyJSON
 import GDPerformanceView_Swift
+import Kingfisher
 
 class ViewController: UIViewController {
     
@@ -39,7 +38,6 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.title = "Swift Study"
         //性能监测工具
         PerformanceMonitor.shared().start()
         self.presenter.getData { (dataArray, layoutArray) in
@@ -56,6 +54,8 @@ class ViewController: UIViewController {
     
     // MARK: UI
     func setupUI() {
+        self.navigationItem.title = "Swift Study"
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: "ClearCache", style: UIBarButtonItem.Style.done, target: self, action: #selector(clearCache))
         self.view.addSubview(self.tableView)
         self.tableView.snp.makeConstraints { (make) in
             make.left.right.equalToSuperview()
@@ -63,6 +63,15 @@ class ViewController: UIViewController {
             make.height.equalToSuperview()
         }
     }
+    
+    // MARK: Events
+    @objc func clearCache() {
+        ImageCache.default.clearMemoryCache()
+        ImageCache.default.clearDiskCache {
+            print("图片清除缓存完毕")
+        }
+    }
+    
 }
 
 // MARK: UITableViewDelegate, UITableViewDataSource
@@ -97,9 +106,9 @@ extension ViewController : UITableViewDelegate, UITableViewDataSource {
         if indexPath.row <= self.layoutArray.count - 1 {
             layout = self.layoutArray[indexPath.row] as? SLLayout
         }
-        cell.configureCell(model: model, layout: layout)
         cell.delegate = self.presenter
         cell.cellIndexPath = indexPath
+        cell.configureCell(model: model, layout: layout)
         return cell;
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

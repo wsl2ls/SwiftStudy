@@ -7,9 +7,10 @@
 //
 
 import UIKit
+import HandyJSON
 
 // 数据模型
-struct SLModel {
+struct SLModel : HandyJSON {
     var headPic: String = ""
     var nickName: String?
     var time: String?
@@ -18,7 +19,7 @@ struct SLModel {
     var images: [String] = []
 }
 // 布局信息
-struct SLLayout {
+struct SLLayout : HandyJSON {
     var attributedString: NSMutableAttributedString?
     var cellHeight: CGFloat = 0
     var expan: Bool = false //是否展开
@@ -65,15 +66,12 @@ class SLPresenter: NSObject{
         //async异步追加Block块（async函数不做任何等待）
         DispatchQueue.global(qos: .default).async {
             //处理耗时操作的代码块...
-            for _ in 1...20 {
+            let path:String? = Bundle.main.path(forResource: "Data", ofType: "plist")
+            let array: [Dictionary] = NSArray(contentsOfFile: path!) as! [Dictionary<String, Any>]
+            for dict in array {
                 var model = SLModel()
-                model.headPic = "http://b-ssl.duitang.com/uploads/item/201601/15/20160115140217_HeJAm.jpeg"
-                model.nickName = "鸡汤"
-                model.time = "05-28 15:51"
-                model.source = "我的iPhone XS Max "
-                model.title = " @wsl2ls: 不要迷恋哥，哥只是一个传说 https://github.com/wsl2ls, 是终将要成为#海贼王#的男人！// @蜜桃君🏀: 🦆你真的太帅了[爱你] https://github.com/wsl2ls // @且行且珍惜_iOS: 发起了话题#我是一只帅哥#不信点我看看 https://www.jianshu.com/u/e15d1f644bea , 相信我，不会让你失望滴"
-                for _ in 0...arc4random()%9 {
-                    model.images.append("http://cdn.duitang.com/uploads/item/201512/14/20151214144901_jshKA.thumb.700_0.jpeg")
+                if let object = SLModel.deserialize(from: dict) {
+                    model = object
                 }
                 self.dataArray.add(model)
                 //元组
