@@ -37,8 +37,8 @@ class SLTextView: UITextView {
 class SLTableViewCell: UITableViewCell {
     
     //头像
-    lazy var headImage: UIImageView = {
-        let headimage = UIImageView()
+    lazy var headImage: AnimatedImageView = {
+        let headimage = AnimatedImageView()
         //                headimage.layer.cornerRadius = 15
         //                headimage.clipsToBounds = true
         return headimage
@@ -105,10 +105,13 @@ class SLTableViewCell: UITableViewCell {
         self.contentView.addSubview(self.followBtn)
         self.contentView.addSubview(self.textView)
         for _ in 0..<9 {
-            let imageView = UIImageView(frame: CGRect.zero)
+            let imageView = AnimatedImageView(frame: CGRect.zero)
             imageView.isHidden = true
+            imageView.autoPlayAnimatedImage = false
             imageView.isUserInteractionEnabled = true
             self.contentView.addSubview(imageView)
+            let tap: UITapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(tapPicture(tap:)))
+            imageView.addGestureRecognizer(tap)
             self.picsArray.append(imageView)
         }
         self.headImage.snp.makeConstraints { (make) in
@@ -147,9 +150,8 @@ class SLTableViewCell: UITableViewCell {
     func configureCell(model: SLModel, layout: SLLayout?) -> Void {
         let url = URL(string:model.headPic)
         let placeholderImage = UIImage(named: "placeholderImage")!
-        self.headImage.af_setImage(withURL: url!, placeholderImage: placeholderImage)
-        let processor = RoundCornerImageProcessor(cornerRadius: 20)
-        //        self.headImage.kf.setImage(with: url!, options: [.processor(processor)])
+        let processor = RoundCornerImageProcessor(cornerRadius: 350)
+        self.headImage.kf.setImage(with: url!, placeholder:placeholderImage ,options: [.processor(processor)])
         self.nickLabel.text = model.nickName
         self.timeLabel.text =  model.time! + " 来自 " + model.source!
         self.followBtn.setTitle("      关注     ", for: UIControl.State.normal)
@@ -167,22 +169,30 @@ class SLTableViewCell: UITableViewCell {
                 //URL编码
                 let encodingStr = model.images[index].addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
                 let imageUrl = URL(string:encodingStr!)
-                imageView.clipsToBounds = true
                 imageView.kf.indicatorType = .activity
                 imageView.kf.setImage(
                     with: imageUrl!,
                     placeholder: placeholderImage,
-                    options: [.processor(processor), .transition(.fade(1)), .loadDiskFileSynchronously],
+                    options: [.transition(.fade(1)), .loadDiskFileSynchronously],
                     progressBlock: { receivedSize, totalSize in
                         //                        print("\(receivedSize)/\(totalSize)")
                 },
                     completionHandler: { result in
-                        //                        print(result)
+//                 Resultl类型 https://www.jianshu.com/p/2e30f39d99da
+//                                                print(result)
                         //                        print("Finished")
+                        switch result {
+                        case .success(let response):
+                            var image: Image? = response.image
+//                            imageView.da.imageFormat
+//                            ?.kf.imageFormat
+                        case .failure(let response):
+                            print(response)
+                        }
                 }
                 )
-                imageView.contentMode = UIView.ContentMode.scaleToFill
-                imageView.layer.contentsRect = CGRect(x: 0, y: 0, width: 1, height: 0.6)
+                //                imageView.contentMode = UIView.ContentMode.scaleToFill
+                //                imageView.layer.contentsRect = CGRect(x: 0, y: 0, width: 1, height: 0.6)
             } else {
                 imageView.isHidden = true
                 imageView.snp.remakeConstraints { (make) in
@@ -196,6 +206,15 @@ class SLTableViewCell: UITableViewCell {
     // MARK: Events
     @objc func followBtnClicked(followBtn: UIButton) {
         print("已关注")
+    }
+    @objc func tapPicture(tap: UITapGestureRecognizer) {
+        let animationView: AnimatedImageView = tap.view as! AnimatedImageView
+        if animationView.isAnimating {
+           animationView.stopAnimating()
+        }else {
+           animationView.startAnimating()
+        }
+        print("点击图片\(animationView.isAnimating)")
     }
     
     override func awakeFromNib() {
