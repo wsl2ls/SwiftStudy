@@ -108,6 +108,8 @@ class SLTableViewCell: UITableViewCell {
             let imageView = AnimatedImageView(frame: CGRect.zero)
             imageView.isHidden = true
             imageView.autoPlayAnimatedImage = false
+            //            imageView.repeatCount = AnimatedImageView.RepeatCount.once
+            imageView.framePreloadCount = 1
             imageView.isUserInteractionEnabled = true
             self.contentView.addSubview(imageView)
             let tap: UITapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(tapPicture(tap:)))
@@ -150,49 +152,90 @@ class SLTableViewCell: UITableViewCell {
     func configureCell(model: SLModel, layout: SLLayout?) -> Void {
         let url = URL(string:model.headPic)
         let placeholderImage = UIImage(named: "placeholderImage")!
-        let processor = RoundCornerImageProcessor(cornerRadius: 350)
-        self.headImage.kf.setImage(with: url!, placeholder:placeholderImage ,options: [.processor(processor)])
+        let roundCornerProcessor = RoundCornerImageProcessor(cornerRadius: 350)
+        self.headImage.kf.setImage(with: url!, placeholder:placeholderImage ,options: [.processor(roundCornerProcessor)])
         self.nickLabel.text = model.nickName
         self.timeLabel.text =  model.time! + " 来自 " + model.source!
         self.followBtn.setTitle("      关注     ", for: UIControl.State.normal)
         self.textView.attributedText = layout?.attributedString
-        
         for (index, imageView) in self.picsArray.enumerated() {
             if model.images.count > index {
                 imageView.isHidden = false
                 let width = (UIScreen.main.bounds.size.width - 15 * 2 - 5 * 2)/3
+                let height = width
                 imageView.snp.remakeConstraints { (make) in
-                    make.top.equalTo(self.textView.snp.bottom).offset(15 + (index/3) * Int(width + 5))
+                    make.top.equalTo(self.textView.snp.bottom).offset(15 + (index/3) * Int(height + 5))
                     make.left.equalTo(15 + (index%3) * Int(width + 5))
-                    make.width.height.equalTo(width)
+                    make.width.height.equalTo(height)
                 }
                 //URL编码
                 let encodingStr = model.images[index].addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
                 let imageUrl = URL(string:encodingStr!)
-                imageView.kf.indicatorType = .activity
-                imageView.kf.setImage(
-                    with: imageUrl!,
-                    placeholder: placeholderImage,
-                    options: [.transition(.fade(1)), .loadDiskFileSynchronously],
-                    progressBlock: { receivedSize, totalSize in
-                        //                        print("\(receivedSize)/\(totalSize)")
-                },
-                    completionHandler: { result in
-//                 Resultl类型 https://www.jianshu.com/p/2e30f39d99da
-//                                                print(result)
-                        //                        print("Finished")
-                        switch result {
-                        case .success(let response):
-                            var image: Image? = response.image
-//                            imageView.da.imageFormat
-//                            ?.kf.imageFormat
-                        case .failure(let response):
-                            print(response)
+                //                imageView.kf.indicatorType = .activity
+                /*
+                 //降采样
+                 // let processor = DownsamplingImageProcessor(size: CGSize(width: width, height: width))
+                 imageView.kf.setImage(
+                 with: imageUrl!,
+                 placeholder: placeholderImage,
+                 options: [.transition(.fade(1)), .loadDiskFileSynchronously],
+                 progressBlock: { receivedSize, totalSize in
+                 //                        print("\(receivedSize)/\(totalSize)")
+                 },
+                 completionHandler: { result in
+                 //                 Resultl类型 https://www.jianshu.com/p/2e30f39d99da
+                 switch result {
+                 case .success(let response):
+                 let image: Image = response.image
+                 //                            ?.kf.imageFormat
+                 print(image.size)
+                 if (image.size.height/image.size.width > 3) {
+                 //大长图 仅展示顶部部分内容
+                 let proportion: CGFloat = height/(width * image.size.height/image.size.width)
+                 imageView.layer.contentsRect = CGRect(x: 0, y: 0, width: 1, height: proportion)
+                 } else if image.size.width >= image.size.height {
+                 // 宽>高
+                 let proportion: CGFloat = width/(height * image.size.width/image.size.height)
+                 imageView.layer.contentsRect = CGRect(x: (1 - proportion)/2, y: 0, width: proportion, height: 1)
+                 }else if image.size.width < image.size.height {
+                 //宽<高
+                 let proportion: CGFloat = height/(width * image.size.height/image.size.width)
+                 imageView.layer.contentsRect = CGRect(x: 0, y: (1 - proportion)/2, width: 1, height: proportion)
+                 }
+                 case .failure(let response):
+                 print(response)
+                 }
+                 }
+                 )
+                 */
+                
+                imageView.image = placeholderImage
+                // 高分辨率的图片采取降采样的方法提高性能
+                let processor = DownsamplingImageProcessor(size: CGSize(width: width, height: width))
+                KingfisherManager.shared.retrieveImage(with: imageUrl!, options:[.processor(processor), .scaleFactor(UIScreen.main.scale), .cacheOriginalImage] ) { result in
+                    switch result {
+                    case .success(let value):
+                        //                        print(value.image)
+                        let image: Image = value.image
+                        if (image.size.height/image.size.width > 3) {
+                            //大长图 仅展示顶部部分内容
+                            let proportion: CGFloat = height/(width * image.size.height/image.size.width)
+                            imageView.layer.contentsRect = CGRect(x: 0, y: 0, width: 1, height: proportion)
+                        } else if image.size.width >= image.size.height {
+                            // 宽>高
+                            let proportion: CGFloat = width/(height * image.size.width/image.size.height)
+                            imageView.layer.contentsRect = CGRect(x: (1 - proportion)/2, y: 0, width: proportion, height: 1)
+                        }else if image.size.width < image.size.height {
+                            //宽<高
+                            let proportion: CGFloat = height/(width * image.size.height/image.size.width)
+                            imageView.layer.contentsRect = CGRect(x: 0, y: (1 - proportion)/2, width: 1, height: proportion)
                         }
+                        imageView.image = image
+                    case .failure(let error):
+                        print(error)
+                    }
                 }
-                )
-                //                imageView.contentMode = UIView.ContentMode.scaleToFill
-                //                imageView.layer.contentsRect = CGRect(x: 0, y: 0, width: 1, height: 0.6)
+                
             } else {
                 imageView.isHidden = true
                 imageView.snp.remakeConstraints { (make) in
@@ -210,9 +253,9 @@ class SLTableViewCell: UITableViewCell {
     @objc func tapPicture(tap: UITapGestureRecognizer) {
         let animationView: AnimatedImageView = tap.view as! AnimatedImageView
         if animationView.isAnimating {
-           animationView.stopAnimating()
+            animationView.stopAnimating()
         }else {
-           animationView.startAnimating()
+            animationView.startAnimating()
         }
         print("点击图片\(animationView.isAnimating)")
     }
