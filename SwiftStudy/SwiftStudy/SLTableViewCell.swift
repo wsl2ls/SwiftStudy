@@ -171,7 +171,7 @@ class SLTableViewCell: UITableViewCell {
                 //URL编码
                 let encodingStr = model.images[index].addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
                 let imageUrl = URL(string:encodingStr!)
-                //                imageView.kf.indicatorType = .activity
+               
                 /*
                  //降采样
                  // let processor = DownsamplingImageProcessor(size: CGSize(width: width, height: width))
@@ -209,13 +209,14 @@ class SLTableViewCell: UITableViewCell {
                  )
                  */
                 
+//                imageView.kf.indicatorType = .activity
                 imageView.image = placeholderImage
                 // 高分辨率的图片采取降采样的方法提高性能
                 let processor = DownsamplingImageProcessor(size: CGSize(width: width, height: width))
                 KingfisherManager.shared.retrieveImage(with: imageUrl!, options:[.processor(processor), .scaleFactor(UIScreen.main.scale), .cacheOriginalImage] ) { result in
                     switch result {
                     case .success(let value):
-                        //                        print(value.image)
+//                        print(value.cacheType)
                         let image: Image = value.image
                         if (image.size.height/image.size.width > 3) {
                             //大长图 仅展示顶部部分内容
@@ -231,6 +232,14 @@ class SLTableViewCell: UITableViewCell {
                             imageView.layer.contentsRect = CGRect(x: 0, y: (1 - proportion)/2, width: 1, height: proportion)
                         }
                         imageView.image = image
+                        //淡出动画
+                        if value.cacheType == CacheType.none {
+                            let fadeTransition: CATransition = CATransition()
+                            fadeTransition.duration = 0.15
+                            fadeTransition.timingFunction = CAMediaTimingFunction.init(name: CAMediaTimingFunctionName.easeOut)
+                            fadeTransition.type = CATransitionType.fade
+                            imageView.layer.add(fadeTransition, forKey: "contents")
+                        }
                     case .failure(let error):
                         print(error)
                     }
