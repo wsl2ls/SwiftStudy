@@ -88,15 +88,11 @@ class SLPresenter: NSObject{
     
     //标题正则匹配结果
     func matchesResultOfTitle(title: String, expan: Bool) -> (attributedString : NSMutableAttributedString , height : CGFloat) {
-        //段落
-        let paragraphStyle : NSMutableParagraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = 4 //行间距
         //原富文本标题
         var attributedString:NSMutableAttributedString = NSMutableAttributedString(string:title)
         //原富文本的范围
         let titleRange = NSRange(location: 0, length:attributedString.length)
-        attributedString.addAttribute(NSAttributedString.Key.font, value: UIFont.systemFont(ofSize: 16), range: titleRange)
-        attributedString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: titleRange)
+        
         //最大字符 截取位置
         var cutoffLocation = KTitleLengthMax
         //        print("\(attributedString.length)")
@@ -110,7 +106,6 @@ class SLPresenter: NSObject{
             let replaceStr : NSMutableAttributedString = NSMutableAttributedString(attachment: attchimage)
             replaceStr.append(NSAttributedString.init(string: "查看图片")) //添加描述
             replaceStr.addAttributes([NSAttributedString.Key.link :"http://b-ssl.duitang.com/uploads/item/201601/15/20160115140217_HeJAm.jpeg"], range: NSRange(location: 0, length:replaceStr.length ))
-            replaceStr.addAttribute(NSAttributedString.Key.font, value: UIFont.systemFont(ofSize: 16), range: NSRange(location: 0, length:replaceStr.length))
             //注意：涉及到文本替换的 ，每替换一次，原有的富文本位置发生改变，下一轮替换的起点需要重新计算！
             let newLocation = range.location - (titleRange.length - attributedString.length)
             //图标+描述 替换HTTP链接字符
@@ -121,6 +116,7 @@ class SLPresenter: NSObject{
             }
             //             print("==== \(attributedString.length)")
         }
+        
         //话题匹配
         let topicRanges:[NSRange] = getRangesFromResult(regexStr: KRegularMatcheTopic, title: attributedString.string)
         for range in topicRanges {
@@ -130,6 +126,7 @@ class SLPresenter: NSObject{
                 cutoffLocation = range.location
             }
         }
+        
         //@用户匹配
         let userRanges:[NSRange] = getRangesFromResult(regexStr: KRegularMatcheUser,title: attributedString.string)
         for range in userRanges {
@@ -139,6 +136,7 @@ class SLPresenter: NSObject{
                 cutoffLocation = range.location
             }
         }
+        
         //表情匹配
         let emotionRanges:[NSRange] = getRangesFromResult(regexStr: KRegularMatcheEmotion,title: attributedString.string)
         //经过上述的匹配替换后，此时富文本的范围
@@ -160,20 +158,26 @@ class SLPresenter: NSObject{
                 cutoffLocation = newLocation
             }
         }
+        
         //超出字符个数限制，显示全文
         if attributedString.length > cutoffLocation {
             var fullText: NSMutableAttributedString
             if expan {
                 attributedString.append(NSAttributedString(string:"\n"))
                 fullText = NSMutableAttributedString(string:"收起")
+                fullText.addAttributes([NSAttributedString.Key.link :"FullText"], range: NSRange(location:0, length:fullText.length ))
             }else {
                 attributedString = attributedString.attributedSubstring(from: NSRange(location: 0, length: cutoffLocation)) as! NSMutableAttributedString
-                attributedString.append(NSAttributedString(string:"..."))
-                fullText = NSMutableAttributedString(string:"全文")
+                fullText = NSMutableAttributedString(string:"...全文")
+                fullText.addAttributes([NSAttributedString.Key.link :"FullText"], range: NSRange(location:3, length:fullText.length - 3))
             }
-            fullText.addAttributes([NSAttributedString.Key.link :"FullText", NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16)], range: NSRange(location:0, length:fullText.length))
             attributedString.append(fullText)
         }
+        //段落
+        let paragraphStyle : NSMutableParagraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 4 //行间距
+        attributedString.addAttributes([NSAttributedString.Key.paragraphStyle :paragraphStyle, NSAttributedString.Key.font : UIFont.systemFont(ofSize: 16)], range: NSRange(location:0, length:attributedString.length))
+        
         //元组
         let attributedStringHeight = (attributedString, heightOfAttributedString(attributedString))
         return attributedStringHeight

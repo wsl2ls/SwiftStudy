@@ -20,11 +20,11 @@ class ViewController: UIViewController {
         let tableView = UITableView(frame: CGRect.zero, style: UITableView.Style.grouped)
         tableView.delegate = self
         tableView.dataSource = self
-        //        tableView.contentInsetAdjustmentBehavior = UIScrollView.ContentInsetAdjustmentBehavior.never
+        //      tableView.contentInsetAdjustmentBehavior = UIScrollView.ContentInsetAdjustmentBehavior.never
         //        tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
         tableView.estimatedRowHeight = 0
-        //        tableView.estimatedSectionFooterHeight = 0
-        //        tableView.estimatedSectionHeaderHeight = 0
+        tableView.estimatedSectionFooterHeight = 0.1
+        tableView.estimatedSectionHeaderHeight = 0.1
         tableView.register(SLTableViewCell.self, forCellReuseIdentifier: "cellId")
         return tableView
     }()
