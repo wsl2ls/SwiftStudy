@@ -20,11 +20,11 @@ class ViewController: UIViewController {
         let tableView = UITableView(frame: CGRect.zero, style: UITableView.Style.grouped)
         tableView.delegate = self
         tableView.dataSource = self
-        //      tableView.contentInsetAdjustmentBehavior = UIScrollView.ContentInsetAdjustmentBehavior.never
+        //        tableView.contentInsetAdjustmentBehavior = UIScrollView.ContentInsetAdjustmentBehavior.never
         //        tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
         tableView.estimatedRowHeight = 0
-        tableView.estimatedSectionFooterHeight = 0.1
-        tableView.estimatedSectionHeaderHeight = 0.1
+        tableView.estimatedSectionFooterHeight = 0
+        tableView.estimatedSectionHeaderHeight = 0
         tableView.register(SLTableViewCell.self, forCellReuseIdentifier: "cellId")
         return tableView
     }()
@@ -91,13 +91,13 @@ extension ViewController : UITableViewDelegate, UITableViewDataSource {
         return nil;
     }
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 0
+        return 0.1
     }
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         return nil
     }
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 0
+        return 0.1
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell:SLTableViewCell = tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath) as! SLTableViewCell

@@ -10,8 +10,9 @@ import UIKit
 import Kingfisher
 
 //代理方法
-protocol SLTableViewCellDelegate : NSObjectProtocol {
-    func fullTextAction(characterRange: NSRange, indexPath: IndexPath)
+@objc protocol SLTableViewCellDelegate : NSObjectProtocol {
+    func fullTextAction(characterRange: NSRange, indexPath: IndexPath)  //点击全文
+    func tapImageAction(indexOfImages:NSInteger, indexPath: IndexPath)  //点击图片
 }
 
 //标题富文本视图
@@ -171,7 +172,7 @@ class SLTableViewCell: UITableViewCell {
                 //URL编码
                 let encodingStr = model.images[index].addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
                 let imageUrl = URL(string:encodingStr!)
-               
+                
                 /*
                  //降采样
                  // let processor = DownsamplingImageProcessor(size: CGSize(width: width, height: width))
@@ -209,14 +210,14 @@ class SLTableViewCell: UITableViewCell {
                  )
                  */
                 
-//                imageView.kf.indicatorType = .activity
+                //                imageView.kf.indicatorType = .activity
                 imageView.image = placeholderImage
                 // 高分辨率的图片采取降采样的方法提高性能
                 let processor = DownsamplingImageProcessor(size: CGSize(width: width, height: width))
                 KingfisherManager.shared.retrieveImage(with: imageUrl!, options:[.processor(processor), .scaleFactor(UIScreen.main.scale), .cacheOriginalImage] ) { result in
                     switch result {
                     case .success(let value):
-//                        print(value.cacheType)
+                        //                        print(value.cacheType)
                         let image: Image = value.image
                         if (image.size.height/image.size.width > 3) {
                             //大长图 仅展示顶部部分内容
@@ -261,10 +262,8 @@ class SLTableViewCell: UITableViewCell {
     }
     @objc func tapPicture(tap: UITapGestureRecognizer) {
         let animationView: AnimatedImageView = tap.view as! AnimatedImageView
-        if animationView.isAnimating {
-            animationView.stopAnimating()
-        }else {
-            animationView.startAnimating()
+        if((self.delegate?.responds(to: #selector(SLTableViewCellDelegate.tapImageAction(indexOfImages:indexPath:))))!){
+            self.delegate?.tapImageAction(indexOfImages: animationView.tag, indexPath: self.cellIndexPath!)
         }
         print("点击图片\(animationView.isAnimating)")
     }
