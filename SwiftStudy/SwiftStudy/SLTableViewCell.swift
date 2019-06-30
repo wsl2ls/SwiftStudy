@@ -172,45 +172,6 @@ class SLTableViewCell: UITableViewCell {
                 //URL编码
                 let encodingStr = model.images[index].addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
                 let imageUrl = URL(string:encodingStr!)
-                
-                /*
-                 //降采样
-                 // let processor = DownsamplingImageProcessor(size: CGSize(width: width, height: width))
-                 imageView.kf.setImage(
-                 with: imageUrl!,
-                 placeholder: placeholderImage,
-                 options: [.transition(.fade(1)), .loadDiskFileSynchronously],
-                 progressBlock: { receivedSize, totalSize in
-                 //                        print("\(receivedSize)/\(totalSize)")
-                 },
-                 completionHandler: { result in
-                 //                 Resultl类型 https://www.jianshu.com/p/2e30f39d99da
-                 switch result {
-                 case .success(let response):
-                 let image: Image = response.image
-                 //                            ?.kf.imageFormat
-                 print(image.size)
-                 if (image.size.height/image.size.width > 3) {
-                 //大长图 仅展示顶部部分内容
-                 let proportion: CGFloat = height/(width * image.size.height/image.size.width)
-                 imageView.layer.contentsRect = CGRect(x: 0, y: 0, width: 1, height: proportion)
-                 } else if image.size.width >= image.size.height {
-                 // 宽>高
-                 let proportion: CGFloat = width/(height * image.size.width/image.size.height)
-                 imageView.layer.contentsRect = CGRect(x: (1 - proportion)/2, y: 0, width: proportion, height: 1)
-                 }else if image.size.width < image.size.height {
-                 //宽<高
-                 let proportion: CGFloat = height/(width * image.size.height/image.size.width)
-                 imageView.layer.contentsRect = CGRect(x: 0, y: (1 - proportion)/2, width: 1, height: proportion)
-                 }
-                 case .failure(let response):
-                 print(response)
-                 }
-                 }
-                 )
-                 */
-                
-                //                imageView.kf.indicatorType = .activity
                 imageView.image = placeholderImage
                 // 高分辨率的图片采取降采样的方法提高性能
                 let processor = DownsamplingImageProcessor(size: CGSize(width: width, height: width))

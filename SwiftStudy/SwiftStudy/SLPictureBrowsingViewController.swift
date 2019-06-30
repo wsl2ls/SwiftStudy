@@ -7,7 +7,8 @@
 //
 
 import UIKit
-
+import Kingfisher
+//图集浏览控制器
 class SLPictureBrowsingViewController: UIViewController {
     
     lazy var collectionView : UICollectionView = {
@@ -17,14 +18,22 @@ class SLPictureBrowsingViewController: UIViewController {
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.isPagingEnabled = true
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "ImageCellId")
+        collectionView.register(SLPictureBrowsingCell.self, forCellWithReuseIdentifier: "ImageCellId")
         return collectionView
     }()
+    var imagesArray:[String] = []
     
+    // MARK: Override
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+//        ImageCache.default.clearMemoryCache()
+//        ImageCache.default.clearDiskCache {
+//            print("图片清除缓存完毕")
+//        }
     }
    // MARK: UI
     func setupUI() {
@@ -44,11 +53,11 @@ extension SLPictureBrowsingViewController : UICollectionViewDelegate, UICollecti
         return 1
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 6
+        return imagesArray.count
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell:UICollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCellId", for: indexPath);
-        cell.backgroundColor = UIColor.green
+        let cell:SLPictureBrowsingCell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCellId", for: indexPath) as! SLPictureBrowsingCell;
+        cell.reloadData(picUrl: self.imagesArray[indexPath.row])
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

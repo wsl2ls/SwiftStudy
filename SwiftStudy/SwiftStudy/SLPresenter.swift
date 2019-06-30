@@ -219,6 +219,8 @@ extension SLPresenter : SLTableViewCellDelegate {
         let pictureBrowsingViewController:SLPictureBrowsingViewController = SLPictureBrowsingViewController()
         let viewController: UINavigationController = (UIApplication.shared.keyWindow?.rootViewController)! as! UINavigationController
         print("\(viewController)")
+        let model:SLModel = self.dataArray[indexPath.row] as! SLModel
+        pictureBrowsingViewController.imagesArray = model.images
         viewController.pushViewController(pictureBrowsingViewController, animated: true)
     }
     //全文展开、收起
