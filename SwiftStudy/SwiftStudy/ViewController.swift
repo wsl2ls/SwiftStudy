@@ -50,6 +50,10 @@ class ViewController: UIViewController {
             self.tableView.reloadRows(at: [indexPath], with: UITableView.RowAnimation.none)
         }
         setupUI()
+        //限制内存高速缓存大小为100MB
+        ImageCache.default.memoryStorage.config.totalCostLimit = 3100 * 1024 * 1024
+        //限制内存缓存最多可容纳150张图像
+        ImageCache.default.memoryStorage.config.countLimit = 150
     }
     
     // MARK: UI

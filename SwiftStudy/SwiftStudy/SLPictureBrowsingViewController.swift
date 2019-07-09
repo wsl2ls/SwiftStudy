@@ -30,10 +30,6 @@ class SLPictureBrowsingViewController: UIViewController {
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//        ImageCache.default.clearMemoryCache()
-//        ImageCache.default.clearDiskCache {
-//            print("图片清除缓存完毕")
-//        }
     }
    // MARK: UI
     func setupUI() {
@@ -47,7 +43,7 @@ class SLPictureBrowsingViewController: UIViewController {
         }
     }
 }
-   // MARK: UICollectionViewDelegate, UICollectionViewDataSource
+   // MARK: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout
 extension SLPictureBrowsingViewController : UICollectionViewDelegate, UICollectionViewDataSource , UICollectionViewDelegateFlowLayout {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
@@ -58,6 +54,7 @@ extension SLPictureBrowsingViewController : UICollectionViewDelegate, UICollecti
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell:SLPictureBrowsingCell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCellId", for: indexPath) as! SLPictureBrowsingCell;
         cell.reloadData(picUrl: self.imagesArray[indexPath.row])
+        cell.isUserInteractionEnabled = false
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

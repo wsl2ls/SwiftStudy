@@ -50,11 +50,11 @@ class SLPictureBrowsingCell: UICollectionViewCell {
                     let image: Image = response.image
                     //                            ?.kf.imageFormat
                     print(image.size)
-                    self.imageView.snp.makeConstraints { (make) in
+                    self.imageView.snp.remakeConstraints { (make) in
                         make.centerY.equalToSuperview()
                         make.centerX.equalToSuperview()
                         make.width.equalTo(UIScreen.main.bounds.size.width)
-                        make.height.equalTo(UIScreen.main.bounds.size.width).multipliedBy(image.size.height/image.size.width)
+                        make.height.equalTo(self.contentView.snp.width).multipliedBy(image.size.height/image.size.width)
                     }
                 case .failure(let response):
                     print(response)
