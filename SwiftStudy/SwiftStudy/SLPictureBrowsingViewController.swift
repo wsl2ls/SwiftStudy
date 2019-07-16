@@ -37,7 +37,9 @@ class SLPictureBrowsingViewController: UIViewController {
    // MARK: UI
     func setupUI() {
         self.navigationItem.title = "图集浏览"
+        self.navigationController?.navigationBar.isHidden = true
         self.view.backgroundColor = UIColor.white;
+        self.view.clipsToBounds = true;
         self.view.addSubview(self.collectionView)
         self.collectionView.snp.makeConstraints { (make) in
             make.left.equalToSuperview().offset(-KPictureSpace)
@@ -58,8 +60,10 @@ extension SLPictureBrowsingViewController : UICollectionViewDelegate, UICollecti
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell:SLPictureBrowsingCell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCellId", for: indexPath) as! SLPictureBrowsingCell;
         cell.reloadData(picUrl: self.imagesArray[indexPath.row])
-        cell.isUserInteractionEnabled = false
         return cell
+    }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        self.navigationController?.popViewController(animated: true)
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: self.view.frame.size.width + 2 * KPictureSpace, height: self.view.frame.size.height)

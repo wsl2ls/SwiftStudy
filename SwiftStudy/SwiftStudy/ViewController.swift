@@ -40,6 +40,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         //性能监测工具
         PerformanceMonitor.shared().start()
+        //中间者 处理数据和事件
         self.presenter.getData { (dataArray, layoutArray) in
             //            print("刷新")
             self.dataArray = dataArray
@@ -54,6 +55,10 @@ class ViewController: UIViewController {
         ImageCache.default.memoryStorage.config.totalCostLimit = 3100 * 1024 * 1024
         //限制内存缓存最多可容纳150张图像
         ImageCache.default.memoryStorage.config.countLimit = 150
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.isHidden = false
     }
     
     // MARK: UI

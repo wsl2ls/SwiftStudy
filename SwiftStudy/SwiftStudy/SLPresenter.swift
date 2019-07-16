@@ -37,6 +37,7 @@ typealias SLGetDataCompleteBlock = (_ dataArray: NSMutableArray, _ layoutArray: 
 //标题全文点击回调
 typealias SLFullTextCompleteBlock = (_ indexPath: IndexPath) ->Void
 
+//中间者
 class SLPresenter: NSObject{
     
     var dataArray = NSMutableArray()
