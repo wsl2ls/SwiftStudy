@@ -8,6 +8,9 @@
 
 import UIKit
 import Kingfisher
+
+let KPictureSpace:CGFloat = 8  // 图片间隔
+
 //图集浏览控制器
 class SLPictureBrowsingViewController: UIViewController {
     
@@ -37,7 +40,8 @@ class SLPictureBrowsingViewController: UIViewController {
         self.view.backgroundColor = UIColor.white;
         self.view.addSubview(self.collectionView)
         self.collectionView.snp.makeConstraints { (make) in
-            make.left.right.equalToSuperview()
+            make.left.equalToSuperview().offset(-KPictureSpace)
+            make.right.equalToSuperview().offset(KPictureSpace)
             make.top.equalToSuperview()
             make.height.equalToSuperview()
         }
@@ -58,7 +62,7 @@ extension SLPictureBrowsingViewController : UICollectionViewDelegate, UICollecti
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: self.view.frame.size.width, height: self.view.frame.size.height)
+        return CGSize(width: self.view.frame.size.width + 2 * KPictureSpace, height: self.view.frame.size.height)
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
