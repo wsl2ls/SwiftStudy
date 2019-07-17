@@ -14,7 +14,6 @@ class SLPictureBrowsingCell: UICollectionViewCell {
     //缩放视图
     lazy var pictureZoomView: SLPictureZoomView = {
         let pictureZoomView = SLPictureZoomView()
-//        pictureZoomView.contentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
         return pictureZoomView
     }()
     
@@ -34,14 +33,14 @@ class SLPictureBrowsingCell: UICollectionViewCell {
             make.width.equalTo(UIScreen.main.bounds.size.width)
             make.height.equalTo(UIScreen.main.bounds.size.height)
         }
+        //解决 UIScrollView 和UITableViewCell 冲突
         self.pictureZoomView.isUserInteractionEnabled = false;
         self.contentView.addGestureRecognizer(self.pictureZoomView.panGestureRecognizer)
+        self.contentView.addGestureRecognizer(self.pictureZoomView.pinchGestureRecognizer!)
     }
     // MARK: ReloadData
     func reloadData(picUrl:String) {
         self.pictureZoomView.setImage(picUrl: picUrl)
-        
-//        self.pictureZoomView.contentSize = CGSize(width: 500, height: 500);
     }
     
 }

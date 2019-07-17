@@ -13,7 +13,12 @@ let KPictureSpace:CGFloat = 8  // 图片间隔
 
 //图集浏览控制器
 class SLPictureBrowsingViewController: UIViewController {
-    
+    //隐藏状态栏
+    override var prefersStatusBarHidden: Bool {
+        get {
+            return true
+        }
+    }
     lazy var collectionView : UICollectionView = {
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.scrollDirection = UICollectionView.ScrollDirection.horizontal;
@@ -37,10 +42,8 @@ class SLPictureBrowsingViewController: UIViewController {
         let navigationController:SLNavigationController = self.navigationController as! SLNavigationController
         navigationController.isStatusBarHidden = true
     }
-   // MARK: UI
+    // MARK: UI
     func setupUI() {
-//        self.navigationItem.title = "图集浏览"
-//        self.view.backgroundColor = UIColor.white;
         self.view.clipsToBounds = true;
         self.view.addSubview(self.collectionView)
         self.collectionView.snp.makeConstraints { (make) in
@@ -51,9 +54,8 @@ class SLPictureBrowsingViewController: UIViewController {
         }
     }
     
-    
 }
-   // MARK: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout
+// MARK: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout
 extension SLPictureBrowsingViewController : UICollectionViewDelegate, UICollectionViewDataSource , UICollectionViewDelegateFlowLayout {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
