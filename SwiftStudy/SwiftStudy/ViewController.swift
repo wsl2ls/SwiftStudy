@@ -56,12 +56,13 @@ class ViewController: UIViewController {
         //限制内存缓存最多可容纳150张图像
         ImageCache.default.memoryStorage.config.countLimit = 150
     }
+    // MARK: UI
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.isHidden = false
+        let navigationController:SLNavigationController = self.navigationController as! SLNavigationController
+        navigationController.isStatusBarHidden = false
     }
-    
-    // MARK: UI
     func setupUI() {
         self.navigationItem.title = "Swift Study"
         self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: "ClearCache", style: UIBarButtonItem.Style.done, target: self, action: #selector(clearCache))

@@ -24,6 +24,7 @@
 		7890555D22C8B2AA002617E4 /* SLPictureBrowsingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7890555C22C8B2AA002617E4 /* SLPictureBrowsingCell.swift */; };
 		78A1659B229E3022004443B1 /* SLTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A1659A229E3022004443B1 /* SLTableViewCell.swift */; };
 		78C54D2E22C0E1240022C9F2 /* SLPictureBrowsingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C54D2D22C0E1240022C9F2 /* SLPictureBrowsingViewController.swift */; };
+		78F2A26022DEB4D700DD148A /* SLNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F2A25F22DEB4D700DD148A /* SLNavigationController.swift */; };
 		BB37ADF54BF3E0556A75AB41 /* Pods_SwiftStudy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF98F7E41776603C388BB02B /* Pods_SwiftStudy.framework */; };
 /* End PBXBuildFile section */
 
@@ -69,6 +70,7 @@
 		7890555C22C8B2AA002617E4 /* SLPictureBrowsingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SLPictureBrowsingCell.swift; sourceTree = "<group>"; };
 		78A1659A229E3022004443B1 /* SLTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SLTableViewCell.swift; sourceTree = "<group>"; };
 		78C54D2D22C0E1240022C9F2 /* SLPictureBrowsingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SLPictureBrowsingViewController.swift; sourceTree = "<group>"; };
+		78F2A25F22DEB4D700DD148A /* SLNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SLNavigationController.swift; sourceTree = "<group>"; };
 		EF98F7E41776603C388BB02B /* Pods_SwiftStudy.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwiftStudy.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FD526B84FD9D1FD983A98597 /* Pods-SwiftStudy.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftStudy.release.xcconfig"; path = "Target Support Files/Pods-SwiftStudy/Pods-SwiftStudy.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -126,6 +128,7 @@
 			children = (
 				786ACB59229D169700E9DF72 /* Resource */,
 				78425330228CFC680055454C /* AppDelegate.swift */,
+				78F2A25F22DEB4D700DD148A /* SLNavigationController.swift */,
 				78425332228CFC680055454C /* ViewController.swift */,
 				788DE7B622A7911D00732963 /* SLPresenter.swift */,
 				78A1659A229E3022004443B1 /* SLTableViewCell.swift */,
@@ -384,6 +387,7 @@
 			files = (
 				78A1659B229E3022004443B1 /* SLTableViewCell.swift in Sources */,
 				78425333228CFC680055454C /* ViewController.swift in Sources */,
+				78F2A26022DEB4D700DD148A /* SLNavigationController.swift in Sources */,
 				78425331228CFC680055454C /* AppDelegate.swift in Sources */,
 				788DE7B722A7911D00732963 /* SLPresenter.swift in Sources */,
 				7890555D22C8B2AA002617E4 /* SLPictureBrowsingCell.swift in Sources */,

@@ -33,12 +33,14 @@ class SLPictureBrowsingViewController: UIViewController {
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.isHidden = true
+        let navigationController:SLNavigationController = self.navigationController as! SLNavigationController
+        navigationController.isStatusBarHidden = true
     }
    // MARK: UI
     func setupUI() {
-        self.navigationItem.title = "图集浏览"
-        self.navigationController?.navigationBar.isHidden = true
-        self.view.backgroundColor = UIColor.white;
+//        self.navigationItem.title = "图集浏览"
+//        self.view.backgroundColor = UIColor.white;
         self.view.clipsToBounds = true;
         self.view.addSubview(self.collectionView)
         self.collectionView.snp.makeConstraints { (make) in
@@ -48,6 +50,8 @@ class SLPictureBrowsingViewController: UIViewController {
             make.height.equalToSuperview()
         }
     }
+    
+    
 }
    // MARK: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout
 extension SLPictureBrowsingViewController : UICollectionViewDelegate, UICollectionViewDataSource , UICollectionViewDelegateFlowLayout {

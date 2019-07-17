@@ -29,7 +29,7 @@
         <!--Navigation Controller-->
         <scene sceneID="98C-xv-biy">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="o45-48-Z8Q" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="o45-48-Z8Q" customClass="SLNavigationController" customModule="SwiftStudy" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="URA-tx-lVk">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
