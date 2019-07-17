@@ -105,9 +105,10 @@ class SLTableViewCell: UITableViewCell {
         self.contentView.addSubview(self.timeLabel)
         self.contentView.addSubview(self.followBtn)
         self.contentView.addSubview(self.textView)
-        for _ in 0..<9 {
+        for i in 0..<9 {
             let imageView = AnimatedImageView(frame: CGRect.zero)
             imageView.isHidden = true
+            imageView.tag = i
             imageView.autoPlayAnimatedImage = false
             //            imageView.repeatCount = AnimatedImageView.RepeatCount.once
             imageView.framePreloadCount = 1
@@ -173,9 +174,9 @@ class SLTableViewCell: UITableViewCell {
                 let encodingStr = model.images[index].addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
                 let imageUrl = URL(string:encodingStr!)
                 imageView.image = placeholderImage
-                // 高分辨率的图片采取降采样的方法提高性能
+                // 高分辨率的图片采取降采样的方法提高性能  .cacheOriginalImage
                 let processor = DownsamplingImageProcessor(size: CGSize(width: width, height: width))
-                KingfisherManager.shared.retrieveImage(with: imageUrl!, options:[.processor(processor), .scaleFactor(UIScreen.main.scale), .cacheOriginalImage] ) { result in
+                KingfisherManager.shared.retrieveImage(with: imageUrl!, options:[.processor(processor), .scaleFactor(UIScreen.main.scale)] ) { result in
                     switch result {
                     case .success(let value):
                         //                        print(value.cacheType)

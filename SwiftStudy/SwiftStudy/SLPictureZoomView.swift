@@ -9,15 +9,24 @@
 import UIKit
 import Kingfisher
 
+//struct MyIndicator: Indicator {
+//    let view: UIView = UIView()
+//    func startAnimatingView() { view.isHidden = false }
+//    func stopAnimatingView() { view.isHidden = true }
+//    init() {
+//        view.backgroundColor = .red
+//    }
+//}
+
 class SLPictureZoomView: UIScrollView {
-    
     lazy var imageView: AnimatedImageView = {
         let imageView = AnimatedImageView()
         imageView.isUserInteractionEnabled = true
-        imageView.kf.indicatorType = .activity
         imageView.framePreloadCount = 5
         return imageView
     }()
+    var indicatorView: UIActivityIndicatorView?
+    
     //图片正常尺寸 默认
     var imageNormalSize:CGSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.width)
     
@@ -37,37 +46,51 @@ class SLPictureZoomView: UIScrollView {
         self.addSubview(self.imageView)
     }
     func setImage(picUrl:String) {
+        self.contentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
         //URL编码
         let encodingStr = picUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         let imageUrl = URL(string:encodingStr!)
-        let placeholderImage = UIImage(named: "placeholderImage")!
         weak var weakSelf:SLPictureZoomView? = self
-        imageView.kf.setImage(
-            with: imageUrl!,
-            placeholder: placeholderImage,
-            options: [.transition(.fade(1)), .loadDiskFileSynchronously],
-            progressBlock: { receivedSize, totalSize in
-                
-        },
-            completionHandler: { result in
-                //                 Resultl类型 https://www.jianshu.com/p/2e30f39d99da
-                switch result {
-                case .success(let response):
-                    let image: Image = response.image
-                    //                            ?.kf.imageFormat
-                    print(image.size)
-                    weakSelf?.imageView.snp.remakeConstraints { (make) in
-                        make.centerY.equalToSuperview()
-                        make.centerX.equalToSuperview()
-                        make.width.equalToSuperview()
-                        make.height.equalTo(self.snp.width).multipliedBy(image.size.height/image.size.width)
-                    }
-                    weakSelf?.imageNormalSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.width*image.size.height/image.size.width)
-                case .failure(let response):
-                    print(response)
-                }
+        //是否有缓存
+        let cached = ImageCache.default.isCached(forKey: imageUrl!.absoluteString)
+        if !cached {
+            indicatorView = UIActivityIndicatorView()
+            indicatorView!.color = UIColor.white
+            self.addSubview(self.indicatorView!)
+            indicatorView?.snp.makeConstraints { (make) in
+                make.center.equalToSuperview()
+            }
+            indicatorView?.startAnimating()
         }
-        )
+        
+        KingfisherManager.shared.retrieveImage(with: imageUrl!, options: [.loadDiskFileSynchronously], progressBlock: { (receivedSize, totalSize) in
+            //下载进度
+        }) { (result) in
+            switch result {
+            case .success(let value):
+                //                        print(value.cacheType)
+                let image: Image = value.image
+                //                            ?.kf.imageFormat
+                //                    print(image.size)
+                weakSelf?.imageNormalSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.width*image.size.height/image.size.width)
+                weakSelf?.imageView.frame = CGRect(x: 0, y: 0, width: (weakSelf?.imageNormalSize.width)!, height: (weakSelf?.imageNormalSize.height)!);
+                weakSelf?.imageView.center = CGPoint(x: UIScreen.main.bounds.size.width/2.0, y: UIScreen.main.bounds.size.height/2.0)
+                self.imageView.image = image
+                //淡出动画
+                if value.cacheType == CacheType.none {
+                    let fadeTransition: CATransition = CATransition()
+                    fadeTransition.duration = 0.15
+                    fadeTransition.timingFunction = CAMediaTimingFunction.init(name: CAMediaTimingFunctionName.easeOut)
+                    fadeTransition.type = CATransitionType.fade
+                    self.imageView.layer.add(fadeTransition, forKey: "contents")
+                }
+            case .failure(let error):
+                print(error)
+            }
+            weakSelf?.indicatorView?.stopAnimating()
+            weakSelf?.indicatorView?.removeFromSuperview()
+            weakSelf?.indicatorView = nil
+        }
     }
     
 }
@@ -89,12 +112,15 @@ extension SLPictureZoomView: UIScrollViewDelegate {
         // 延中心点缩放
         let imageScaleWidth: CGFloat = scrollView.zoomScale * self.imageNormalSize.width;
         let imageScaleHeight: CGFloat = scrollView.zoomScale * self.imageNormalSize.height;
-        imageView.snp.remakeConstraints { (make) in
-            make.centerY.equalToSuperview()
-            make.centerX.equalToSuperview()
-            make.width.equalTo(imageScaleWidth)
-            make.height.equalTo(imageScaleHeight)
+        var imageX:CGFloat = 0;
+        var imageY:CGFloat = 0;
+        if (imageScaleWidth < self.frame.size.width) {
+            imageX = (self.frame.size.width - imageScaleWidth)/2.0;
         }
+        if (imageScaleHeight < self.frame.size.height) {
+            imageY = (self.frame.size.height - imageScaleHeight)/2.0;
+        }
+        self.imageView.frame = CGRect(x: imageX, y: imageY, width: imageScaleWidth, height: imageScaleHeight);
     }
     
 }

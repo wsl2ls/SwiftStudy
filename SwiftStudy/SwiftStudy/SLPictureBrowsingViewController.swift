@@ -19,7 +19,7 @@ class SLPictureBrowsingViewController: UIViewController {
             return true
         }
     }
-    lazy var collectionView : UICollectionView = {
+    lazy var collectionView: UICollectionView = {
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.scrollDirection = UICollectionView.ScrollDirection.horizontal;
         let collectionView = UICollectionView.init(frame: CGRect.zero, collectionViewLayout: layout)
@@ -29,7 +29,14 @@ class SLPictureBrowsingViewController: UIViewController {
         collectionView.register(SLPictureBrowsingCell.self, forCellWithReuseIdentifier: "ImageCellId")
         return collectionView
     }()
-    var imagesArray:[String] = []
+    lazy var pageControl: UIPageControl = {
+        let pageControll = UIPageControl()
+        pageControll.pageIndicatorTintColor = UIColor.gray
+        pageControll.currentPageIndicatorTintColor = UIColor.white
+        return pageControll
+    }()
+    var imagesArray: [String]  = []
+    var currentPage: NSInteger = 0
     
     // MARK: Override
     override func viewDidLoad() {
@@ -42,6 +49,7 @@ class SLPictureBrowsingViewController: UIViewController {
         let navigationController:SLNavigationController = self.navigationController as! SLNavigationController
         navigationController.isStatusBarHidden = true
     }
+    
     // MARK: UI
     func setupUI() {
         self.view.clipsToBounds = true;
@@ -52,11 +60,20 @@ class SLPictureBrowsingViewController: UIViewController {
             make.top.equalToSuperview()
             make.height.equalToSuperview()
         }
+        self.collectionView.contentSize = CGSize(width: imagesArray.count * Int(self.view.frame.size.width + 2 * KPictureSpace), height: 0)
+        self.collectionView.contentOffset = CGPoint(x: self.currentPage * Int(self.view.frame.size.width + 2 * KPictureSpace), y: 0)
+        self.view.addSubview(self.pageControl)
+        self.pageControl.snp.makeConstraints { (make) in
+            make.centerX.equalToSuperview()
+            make.bottom.equalToSuperview().offset(-49)
+        }
+        self.pageControl.numberOfPages = imagesArray.count
+        self.pageControl.currentPage = currentPage
     }
-    
 }
+
 // MARK: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout
-extension SLPictureBrowsingViewController : UICollectionViewDelegate, UICollectionViewDataSource , UICollectionViewDelegateFlowLayout {
+extension SLPictureBrowsingViewController : UICollectionViewDelegate, UICollectionViewDataSource , UICollectionViewDelegateFlowLayout , UIScrollViewDelegate {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
@@ -82,6 +99,10 @@ extension SLPictureBrowsingViewController : UICollectionViewDelegate, UICollecti
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 0
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        self.pageControl.currentPage = Int(scrollView.contentOffset.x) / Int(collectionView.frame.size.width)
     }
 }
 

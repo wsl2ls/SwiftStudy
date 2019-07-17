@@ -219,9 +219,10 @@ extension SLPresenter : SLTableViewCellDelegate {
     func tapImageAction(indexOfImages: NSInteger, indexPath: IndexPath) {
         let pictureBrowsingViewController:SLPictureBrowsingViewController = SLPictureBrowsingViewController()
         let viewController: UINavigationController = (UIApplication.shared.keyWindow?.rootViewController)! as! UINavigationController
-        print("\(viewController)")
+//        print("\(viewController)")
         let model:SLModel = self.dataArray[indexPath.row] as! SLModel
         pictureBrowsingViewController.imagesArray = model.images
+        pictureBrowsingViewController.currentPage = indexOfImages;
         viewController.pushViewController(pictureBrowsingViewController, animated: true)
     }
     //全文展开、收起

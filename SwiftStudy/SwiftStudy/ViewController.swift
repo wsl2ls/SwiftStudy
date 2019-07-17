@@ -25,6 +25,7 @@ class ViewController: UIViewController {
         tableView.estimatedRowHeight = 0
         tableView.estimatedSectionFooterHeight = 0
         tableView.estimatedSectionHeaderHeight = 0
+        tableView.allowsSelection = false
         tableView.register(SLTableViewCell.self, forCellReuseIdentifier: "cellId")
         return tableView
     }()
@@ -51,8 +52,8 @@ class ViewController: UIViewController {
             self.tableView.reloadRows(at: [indexPath], with: UITableView.RowAnimation.none)
         }
         setupUI()
-        //限制内存高速缓存大小为100MB
-        ImageCache.default.memoryStorage.config.totalCostLimit = 3100 * 1024 * 1024
+        //限制内存高速缓存大小为50MB
+        ImageCache.default.memoryStorage.config.totalCostLimit = 50 * 1024 * 1024
         //限制内存缓存最多可容纳150张图像
         ImageCache.default.memoryStorage.config.countLimit = 150
     }
