@@ -99,7 +99,7 @@ class SLTableViewCell: UITableViewCell {
     }
     
     // MARK: UI
-    func setupUI() {
+    private  func setupUI() {
         self.contentView.addSubview(self.headImage)
         self.contentView.addSubview(self.nickLabel)
         self.contentView.addSubview(self.timeLabel)
@@ -107,6 +107,7 @@ class SLTableViewCell: UITableViewCell {
         self.contentView.addSubview(self.textView)
         for i in 0..<9 {
             let imageView = AnimatedImageView(frame: CGRect.zero)
+            imageView.backgroundColor = UIColor.lightGray
             imageView.isHidden = true
             imageView.tag = i
             imageView.autoPlayAnimatedImage = false
@@ -173,14 +174,20 @@ class SLTableViewCell: UITableViewCell {
                 //URL编码
                 let encodingStr = model.images[index].addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
                 let imageUrl = URL(string:encodingStr!)
-                imageView.image = placeholderImage
-                // 高分辨率的图片采取降采样的方法提高性能  .cacheOriginalImage
+                // 高分辨率的图片采取降采样的方法提高性能
                 let processor = DownsamplingImageProcessor(size: CGSize(width: width, height: width))
-                KingfisherManager.shared.retrieveImage(with: imageUrl!, options:[.processor(processor), .scaleFactor(UIScreen.main.scale)] ) { result in
+                //性能优化 取消之前的下载任务
+                imageView.kf.cancelDownloadTask()
+                imageView.kf.setImage(with: imageUrl!, placeholder: nil, options: [.processor(processor), .scaleFactor(UIScreen.main.scale), .cacheOriginalImage,] , progressBlock: { (receivedSize, totalSize) in
+                    //下载进度
+                }) { (result) in
                     switch result {
                     case .success(let value):
-                        //                        print(value.cacheType)
                         let image: Image = value.image
+                        //                        var data  = Data(contentsOf: imageUrl!)
+                        //                        let data = image.kf.gifRepresentation()?.kf.imageFormat
+                        print("===== \( value.source)")
+                        imageView.image = image
                         if (image.size.height/image.size.width > 3) {
                             //大长图 仅展示顶部部分内容
                             let proportion: CGFloat = height/(width * image.size.height/image.size.width)
@@ -194,7 +201,6 @@ class SLTableViewCell: UITableViewCell {
                             let proportion: CGFloat = height/(width * image.size.height/image.size.width)
                             imageView.layer.contentsRect = CGRect(x: 0, y: (1 - proportion)/2, width: 1, height: proportion)
                         }
-                        imageView.image = image
                         //淡出动画
                         if value.cacheType == CacheType.none {
                             let fadeTransition: CATransition = CATransition()

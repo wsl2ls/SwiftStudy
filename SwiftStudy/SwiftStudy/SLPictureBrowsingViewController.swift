@@ -23,6 +23,7 @@ class SLPictureBrowsingViewController: UIViewController {
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.scrollDirection = UICollectionView.ScrollDirection.horizontal;
         let collectionView = UICollectionView.init(frame: CGRect.zero, collectionViewLayout: layout)
+        collectionView.contentInsetAdjustmentBehavior = UIScrollView.ContentInsetAdjustmentBehavior.never
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.isPagingEnabled = true

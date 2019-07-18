@@ -47,7 +47,6 @@ class SLPictureZoomView: UIScrollView {
     }
     func setImage(picUrl:String) {
         imageView.image = nil
-        self.contentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
         //URL编码
         let encodingStr = picUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         let imageUrl = URL(string:encodingStr!)
@@ -63,19 +62,24 @@ class SLPictureZoomView: UIScrollView {
             }
             indicatorView?.startAnimating()
         }
-        
-        KingfisherManager.shared.retrieveImage(with: imageUrl!, options: [.loadDiskFileSynchronously], progressBlock: { (receivedSize, totalSize) in
+        //性能优化 取消之前的下载任务
+        imageView.kf.cancelDownloadTask()
+        imageView.kf.setImage(with: imageUrl!, placeholder: nil, options: [.loadDiskFileSynchronously], progressBlock: { (receivedSize, totalSize) in
             //下载进度
         }) { (result) in
+            if weakSelf == nil {
+                return
+            }
             switch result {
             case .success(let value):
                 //                        print(value.cacheType)
                 let image: Image = value.image
-                //                            ?.kf.imageFormat
-                //                    print(image.size)
                 weakSelf?.imageNormalSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.width*image.size.height/image.size.width)
                 weakSelf?.imageView.frame = CGRect(x: 0, y: 0, width: (weakSelf?.imageNormalSize.width)!, height: (weakSelf?.imageNormalSize.height)!);
-                weakSelf?.imageView.center = CGPoint(x: UIScreen.main.bounds.size.width/2.0, y: UIScreen.main.bounds.size.height/2.0)
+                weakSelf?.contentSize =  weakSelf!.imageNormalSize
+                if((weakSelf?.imageNormalSize.height)! <= UIScreen.main.bounds.size.height) {
+                    weakSelf?.imageView.center = CGPoint(x: UIScreen.main.bounds.size.width/2.0, y: UIScreen.main.bounds.size.height/2.0)
+                }
                 weakSelf?.imageView.image = image
                 //淡出动画
                 if value.cacheType == CacheType.none {
@@ -86,6 +90,10 @@ class SLPictureZoomView: UIScrollView {
                     weakSelf?.imageView.layer.add(fadeTransition, forKey: "contents")
                 }
             case .failure(let error):
+                let failImage = UIImage(named: "placeholderImage")!
+                weakSelf?.imageView.image = failImage
+                weakSelf?.imageView.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.width);
+                weakSelf?.imageView.center = CGPoint(x: UIScreen.main.bounds.size.width/2.0, y: UIScreen.main.bounds.size.height/2.0)
                 print(error)
             }
             weakSelf?.indicatorView?.stopAnimating()
