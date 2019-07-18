@@ -46,6 +46,7 @@ class SLPictureZoomView: UIScrollView {
         self.addSubview(self.imageView)
     }
     func setImage(picUrl:String) {
+        imageView.image = nil
         self.contentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
         //URL编码
         let encodingStr = picUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
@@ -75,14 +76,14 @@ class SLPictureZoomView: UIScrollView {
                 weakSelf?.imageNormalSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.width*image.size.height/image.size.width)
                 weakSelf?.imageView.frame = CGRect(x: 0, y: 0, width: (weakSelf?.imageNormalSize.width)!, height: (weakSelf?.imageNormalSize.height)!);
                 weakSelf?.imageView.center = CGPoint(x: UIScreen.main.bounds.size.width/2.0, y: UIScreen.main.bounds.size.height/2.0)
-                self.imageView.image = image
+                weakSelf?.imageView.image = image
                 //淡出动画
                 if value.cacheType == CacheType.none {
                     let fadeTransition: CATransition = CATransition()
                     fadeTransition.duration = 0.15
                     fadeTransition.timingFunction = CAMediaTimingFunction.init(name: CAMediaTimingFunctionName.easeOut)
                     fadeTransition.type = CATransitionType.fade
-                    self.imageView.layer.add(fadeTransition, forKey: "contents")
+                    weakSelf?.imageView.layer.add(fadeTransition, forKey: "contents")
                 }
             case .failure(let error):
                 print(error)

@@ -36,7 +36,7 @@ class SLPictureBrowsingViewController: UIViewController {
         return pageControll
     }()
     var imagesArray: [String]  = []
-    var currentPage: NSInteger = 0
+    var currentPage: Int = 0
     
     // MARK: Override
     override func viewDidLoad() {
@@ -100,9 +100,14 @@ extension SLPictureBrowsingViewController : UICollectionViewDelegate, UICollecti
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
-    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        //四舍五入
+        currentPage = lroundf(Float(scrollView.contentOffset.x/(self.view.frame.size.width + 2 * KPictureSpace)))
+        self.pageControl.currentPage = currentPage
+    }
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        self.pageControl.currentPage = Int(scrollView.contentOffset.x) / Int(collectionView.frame.size.width)
+        currentPage = Int(scrollView.contentOffset.x) / Int(collectionView.frame.size.width)
+        self.pageControl.currentPage = currentPage
     }
 }
 
