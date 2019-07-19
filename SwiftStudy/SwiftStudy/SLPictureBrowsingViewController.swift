@@ -95,7 +95,7 @@ class SLPictureBrowsingViewController: UIViewController {
     
     // MARK: HelpMethods
     //返回上一级页面用于转场动画的视图
-    func fromAnimatonView() -> UIView {
+    func previousAnimatonView() -> UIView {
         if fromViewController!.isKind(of: ViewController.self) {
             let tableViewCell: SLTableViewCell = fromViewController!.tableView.cellForRow(at: currentIndexPath!) as! SLTableViewCell
             let imageView: AnimatedImageView = tableViewCell.picsArray[currentPage]
@@ -108,7 +108,7 @@ class SLPictureBrowsingViewController: UIViewController {
         return UIView()
     }
     //返回当前页面用于转场动画的视图
-    func toAnimatonView() -> UIView {
+    func currentAnimatonView() -> UIView {
         var cell:SLPictureBrowsingCell?
         cell = collectionView.cellForItem(at: IndexPath(row: currentPage, section: 0)) as? SLPictureBrowsingCell
         if cell == nil {
@@ -172,15 +172,15 @@ extension SLPictureBrowsingViewController : UIViewControllerTransitioningDelegat
     //返回一个处理presente动画过渡的对象
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         fromViewController = source as? ViewController
-        transitionAnimation.fromAnimatonView = self.fromAnimatonView()
-        transitionAnimation.toAnimatonView = self.toAnimatonView()
+        transitionAnimation.fromAnimatonView = self.previousAnimatonView()
+        transitionAnimation.toAnimatonView = self.currentAnimatonView()
         return transitionAnimation
     }
     //返回一个处理dismiss动画过渡的对象
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         transitionAnimation.transitionType = SLTransitionType.Dissmiss
-        transitionAnimation.fromAnimatonView = self.toAnimatonView()
-        transitionAnimation.toAnimatonView = self.fromAnimatonView()
+        transitionAnimation.fromAnimatonView = self.currentAnimatonView()
+        transitionAnimation.toAnimatonView = self.previousAnimatonView()
         return transitionAnimation
     }
 }
