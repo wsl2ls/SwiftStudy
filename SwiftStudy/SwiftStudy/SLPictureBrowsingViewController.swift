@@ -36,19 +36,29 @@ class SLPictureBrowsingViewController: UIViewController {
         pageControll.currentPageIndicatorTintColor = UIColor.white
         return pageControll
     }()
+    lazy var transitionAnimation: SLPictureTransitionAnimation = {
+        var transitionAnimation:SLPictureTransitionAnimation = SLPictureTransitionAnimation()
+        self.transitioningDelegate = self as UIViewControllerTransitioningDelegate
+        return transitionAnimation
+    }()
     var imagesArray: [String]  = []
     var currentPage: Int = 0
     
     // MARK: Override
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        transitionAnimation.transitionType = SLTransitionType.Present
+        self.modalPresentationStyle = UIModalPresentationStyle.custom
+    }
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.navigationBar.isHidden = true
-        let navigationController:SLNavigationController = self.navigationController as! SLNavigationController
-        navigationController.isStatusBarHidden = true
     }
     
     // MARK: UI
@@ -87,7 +97,7 @@ extension SLPictureBrowsingViewController : UICollectionViewDelegate, UICollecti
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        self.navigationController?.popViewController(animated: true)
+        self.dismiss(animated: true, completion: nil)
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: self.view.frame.size.width + 2 * KPictureSpace, height: self.view.frame.size.height)
@@ -109,6 +119,19 @@ extension SLPictureBrowsingViewController : UICollectionViewDelegate, UICollecti
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         currentPage = Int(scrollView.contentOffset.x) / Int(collectionView.frame.size.width)
         self.pageControl.currentPage = currentPage
+    }
+}
+
+// MARK: UIViewControllerTransitioningDelegate
+//自定义转场动画
+extension SLPictureBrowsingViewController : UIViewControllerTransitioningDelegate {
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        transitionAnimation.transitionType = SLTransitionType.Present
+        return transitionAnimation
+    }
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        transitionAnimation.transitionType = SLTransitionType.Dissmiss
+        return transitionAnimation
     }
 }
 

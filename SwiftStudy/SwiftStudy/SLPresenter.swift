@@ -217,13 +217,13 @@ class SLPresenter: NSObject{
 extension SLPresenter : SLTableViewCellDelegate {
     //图片点击
     func tapImageAction(indexOfImages: NSInteger, indexPath: IndexPath) {
-        let pictureBrowsingViewController:SLPictureBrowsingViewController = SLPictureBrowsingViewController()
-        let viewController: UINavigationController = (UIApplication.shared.keyWindow?.rootViewController)! as! UINavigationController
+        let pictureBrowsingViewController:SLPictureBrowsingViewController = SLPictureBrowsingViewController.init()
+        let navigationController: SLNavigationController = (UIApplication.shared.keyWindow?.rootViewController)! as! SLNavigationController
 //        print("\(viewController)")
         let model:SLModel = self.dataArray[indexPath.row] as! SLModel
         pictureBrowsingViewController.imagesArray = model.images
-        pictureBrowsingViewController.currentPage = indexOfImages;
-        viewController.pushViewController(pictureBrowsingViewController, animated: true)
+        pictureBrowsingViewController.currentPage = indexOfImages
+        navigationController.topViewController?.present(pictureBrowsingViewController, animated: true, completion: nil)
     }
     //全文展开、收起
     func fullTextAction(characterRange: NSRange, indexPath: IndexPath) {

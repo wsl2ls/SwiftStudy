@@ -186,7 +186,7 @@ class SLTableViewCell: UITableViewCell {
                         let image: Image = value.image
                         //                        var data  = Data(contentsOf: imageUrl!)
                         //                        let data = image.kf.gifRepresentation()?.kf.imageFormat
-                        print("===== \( value.source)")
+//                        print("===== \( value.source)")
                         imageView.image = image
                         if (image.size.height/image.size.width > 3) {
                             //大长图 仅展示顶部部分内容
@@ -233,7 +233,6 @@ class SLTableViewCell: UITableViewCell {
         if((self.delegate?.responds(to: #selector(SLTableViewCellDelegate.tapImageAction(indexOfImages:indexPath:))))!){
             self.delegate?.tapImageAction(indexOfImages: animationView.tag, indexPath: self.cellIndexPath!)
         }
-        print("点击图片\(animationView.isAnimating)")
     }
     
     override func awakeFromNib() {

@@ -18,6 +18,7 @@
 		78425346228CFC6A0055454C /* SwiftStudyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78425345228CFC6A0055454C /* SwiftStudyTests.swift */; };
 		78425351228CFC6A0055454C /* SwiftStudyUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78425350228CFC6A0055454C /* SwiftStudyUITests.swift */; };
 		786ACB5B229D169700E9DF72 /* placeholderImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 786ACB5A229D169700E9DF72 /* placeholderImage.png */; };
+		787B5A6222E15AC40075F0F5 /* SLPictureTransitionAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787B5A6122E15AC40075F0F5 /* SLPictureTransitionAnimation.swift */; };
 		7883117222B0CC4B0045AC03 /* Data.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7883117122B0CC4B0045AC03 /* Data.plist */; };
 		788DDCA922DD72E100962E2E /* SLPictureZoomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788DDCA822DD72E100962E2E /* SLPictureZoomView.swift */; };
 		788DE7B722A7911D00732963 /* SLPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788DE7B622A7911D00732963 /* SLPresenter.swift */; };
@@ -64,6 +65,7 @@
 		78425350228CFC6A0055454C /* SwiftStudyUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftStudyUITests.swift; sourceTree = "<group>"; };
 		78425352228CFC6A0055454C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		786ACB5A229D169700E9DF72 /* placeholderImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = placeholderImage.png; sourceTree = "<group>"; };
+		787B5A6122E15AC40075F0F5 /* SLPictureTransitionAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SLPictureTransitionAnimation.swift; sourceTree = "<group>"; };
 		7883117122B0CC4B0045AC03 /* Data.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Data.plist; sourceTree = "<group>"; };
 		788DDCA822DD72E100962E2E /* SLPictureZoomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SLPictureZoomView.swift; sourceTree = "<group>"; };
 		788DE7B622A7911D00732963 /* SLPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SLPresenter.swift; sourceTree = "<group>"; };
@@ -132,6 +134,7 @@
 				78425332228CFC680055454C /* ViewController.swift */,
 				788DE7B622A7911D00732963 /* SLPresenter.swift */,
 				78A1659A229E3022004443B1 /* SLTableViewCell.swift */,
+				787B5A6122E15AC40075F0F5 /* SLPictureTransitionAnimation.swift */,
 				78C54D2D22C0E1240022C9F2 /* SLPictureBrowsingViewController.swift */,
 				7890555C22C8B2AA002617E4 /* SLPictureBrowsingCell.swift */,
 				788DDCA822DD72E100962E2E /* SLPictureZoomView.swift */,
@@ -387,6 +390,7 @@
 			files = (
 				78A1659B229E3022004443B1 /* SLTableViewCell.swift in Sources */,
 				78425333228CFC680055454C /* ViewController.swift in Sources */,
+				787B5A6222E15AC40075F0F5 /* SLPictureTransitionAnimation.swift in Sources */,
 				78F2A26022DEB4D700DD148A /* SLNavigationController.swift in Sources */,
 				78425331228CFC680055454C /* AppDelegate.swift in Sources */,
 				788DE7B722A7911D00732963 /* SLPresenter.swift in Sources */,

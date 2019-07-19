@@ -26,7 +26,6 @@ class SLPictureZoomView: UIScrollView {
         return imageView
     }()
     var indicatorView: UIActivityIndicatorView?
-    
     //图片正常尺寸 默认
     var imageNormalSize:CGSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.width)
     

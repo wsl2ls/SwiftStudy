@@ -51,18 +51,15 @@ class ViewController: UIViewController {
         self.presenter.fullTextBlock = { (indexPath) in
             self.tableView.reloadRows(at: [indexPath], with: UITableView.RowAnimation.none)
         }
-        setupUI()
         //限制内存高速缓存大小为50MB
         ImageCache.default.memoryStorage.config.totalCostLimit = 50 * 1024 * 1024
         //限制内存缓存最多可容纳150张图像
         ImageCache.default.memoryStorage.config.countLimit = 150
+        setupUI()
     }
     // MARK: UI
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.navigationBar.isHidden = false
-        let navigationController:SLNavigationController = self.navigationController as! SLNavigationController
-        navigationController.isStatusBarHidden = false
     }
     func setupUI() {
         self.navigationItem.title = "Swift Study"
