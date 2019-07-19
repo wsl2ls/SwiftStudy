@@ -12,7 +12,7 @@ import Kingfisher
 //代理方法
 @objc protocol SLTableViewCellDelegate : NSObjectProtocol {
     func fullTextAction(characterRange: NSRange, indexPath: IndexPath)  //点击全文
-    func tapImageAction(indexOfImages:NSInteger, indexPath: IndexPath)  //点击图片
+    func tableViewCell(_ tableViewCell: SLTableViewCell, tapImageAction indexOfImages:NSInteger, indexPath: IndexPath)  //点击图片
 }
 
 //标题富文本视图
@@ -36,7 +36,6 @@ class SLTextView: UITextView {
 }
 
 class SLTableViewCell: UITableViewCell {
-    
     //头像
     lazy var headImage: AnimatedImageView = {
         let headimage = AnimatedImageView()
@@ -86,7 +85,7 @@ class SLTableViewCell: UITableViewCell {
         return textView
     }()
     //图片视图数组
-    var picsArray: [UIImageView] = []
+    var picsArray: [AnimatedImageView] = []
     //当前cell索引
     var cellIndexPath: IndexPath?
     // 代理
@@ -221,7 +220,6 @@ class SLTableViewCell: UITableViewCell {
                 }
             }
         }
-        
     }
     
     // MARK: Events
@@ -230,8 +228,8 @@ class SLTableViewCell: UITableViewCell {
     }
     @objc func tapPicture(tap: UITapGestureRecognizer) {
         let animationView: AnimatedImageView = tap.view as! AnimatedImageView
-        if((self.delegate?.responds(to: #selector(SLTableViewCellDelegate.tapImageAction(indexOfImages:indexPath:))))!){
-            self.delegate?.tapImageAction(indexOfImages: animationView.tag, indexPath: self.cellIndexPath!)
+        if (self.delegate?.responds(to: #selector(SLTableViewCellDelegate.tableViewCell(_:tapImageAction:indexPath:))))! {
+            self.delegate?.tableViewCell(self, tapImageAction: animationView.tag, indexPath: self.cellIndexPath!)
         }
     }
     

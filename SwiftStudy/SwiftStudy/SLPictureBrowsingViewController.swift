@@ -42,12 +42,16 @@ class SLPictureBrowsingViewController: UIViewController {
         return transitionAnimation
     }()
     var imagesArray: [String]  = []
-    var currentPage: Int = 0
+    var currentPage: Int = 0   //当前图片页码
+    var fromViewController: ViewController? //界面来源
+    var currentIndexPath: IndexPath?  //当前数据来源
     
     // MARK: Override
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         transitionAnimation.transitionType = SLTransitionType.Present
+        //设置了这个属性之后，在present转场动画处理时，转场前的视图fromVC的view一直都在管理转场动画视图的容器containerView中，会被转场后,后加入到containerView中视图toVC的View遮住，类似于入栈出栈的原理；如果没有设置的话，present转场时，fromVC.view就会先出栈从containerView移除，然后toVC.View入栈，那之后再进行disMiss转场返回时，需要重新把fromVC.view加入containerView中。
+        //在push转场动画处理时,设置这个属性是没有效果的，也就是没用的。
         self.modalPresentationStyle = UIModalPresentationStyle.custom
     }
     required init?(coder aDecoder: NSCoder) {
@@ -59,6 +63,13 @@ class SLPictureBrowsingViewController: UIViewController {
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        let navigationController: SLNavigationController = (UIApplication.shared.keyWindow?.rootViewController)! as! SLNavigationController
+        navigationController.isStatusBarHidden = true
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        let navigationController: SLNavigationController = (UIApplication.shared.keyWindow?.rootViewController)! as! SLNavigationController
+        navigationController.isStatusBarHidden = false
     }
     
     // MARK: UI
@@ -81,6 +92,39 @@ class SLPictureBrowsingViewController: UIViewController {
         self.pageControl.numberOfPages = imagesArray.count
         self.pageControl.currentPage = currentPage
     }
+    
+    // MARK: HelpMethods
+    //返回上一级页面用于转场动画的视图
+    func fromAnimatonView() -> UIView {
+        if fromViewController!.isKind(of: ViewController.self) {
+            let tableViewCell: SLTableViewCell = fromViewController!.tableView.cellForRow(at: currentIndexPath!) as! SLTableViewCell
+            let imageView: AnimatedImageView = tableViewCell.picsArray[currentPage]
+            let tempView: AnimatedImageView = AnimatedImageView()
+            tempView.image = imageView.image
+            tempView.layer.contentsRect = imageView.layer.contentsRect
+            tempView.frame = imageView.convert(imageView.bounds, to: self.view)
+            return tempView
+        }
+        return UIView()
+    }
+    //返回当前页面用于转场动画的视图
+    func toAnimatonView() -> UIView {
+        var cell:SLPictureBrowsingCell?
+        cell = collectionView.cellForItem(at: IndexPath(row: currentPage, section: 0)) as? SLPictureBrowsingCell
+        if cell == nil {
+            //如果为nil
+            cell = SLPictureBrowsingCell.init(frame: CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: self.view.frame.size.height))
+            cell?.reloadData(picUrl: self.imagesArray[currentPage])
+            let tempView: UIView = cell!.pictureZoomView.imageView as UIView
+            return tempView
+        }else {
+            let imageView: UIView = cell!.pictureZoomView.imageView as UIView
+            //snapshotViewAfterScreenUpdates 对cell的imageView截图保存成另一个视图用于过渡，并将视图转换到当前控制器的坐标
+            let tempView: UIView = imageView.snapshotView(afterScreenUpdates: false)!
+            tempView.frame = imageView.convert(imageView.bounds, to: self.view)
+            return tempView
+        }
+    }
 }
 
 // MARK: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout
@@ -92,7 +136,7 @@ extension SLPictureBrowsingViewController : UICollectionViewDelegate, UICollecti
         return imagesArray.count
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell:SLPictureBrowsingCell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCellId", for: indexPath) as! SLPictureBrowsingCell;
+        let cell:SLPictureBrowsingCell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCellId", for: indexPath) as! SLPictureBrowsingCell
         cell.reloadData(picUrl: self.imagesArray[indexPath.row])
         return cell
     }
@@ -123,14 +167,20 @@ extension SLPictureBrowsingViewController : UICollectionViewDelegate, UICollecti
 }
 
 // MARK: UIViewControllerTransitioningDelegate
-//自定义转场动画
+// 自定义转场动画
 extension SLPictureBrowsingViewController : UIViewControllerTransitioningDelegate {
+    //返回一个处理presente动画过渡的对象
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        transitionAnimation.transitionType = SLTransitionType.Present
+        fromViewController = source as? ViewController
+        transitionAnimation.fromAnimatonView = self.fromAnimatonView()
+        transitionAnimation.toAnimatonView = self.toAnimatonView()
         return transitionAnimation
     }
+    //返回一个处理dismiss动画过渡的对象
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         transitionAnimation.transitionType = SLTransitionType.Dissmiss
+        transitionAnimation.fromAnimatonView = self.toAnimatonView()
+        transitionAnimation.toAnimatonView = self.fromAnimatonView()
         return transitionAnimation
     }
 }
