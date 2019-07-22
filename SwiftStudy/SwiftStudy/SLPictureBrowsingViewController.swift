@@ -112,7 +112,7 @@ class SLPictureBrowsingViewController: UIViewController {
             self.fromViewController?.isStatusBarHidden = false
             break
         case .changed:
-            if zoomView.imageView.center.y > zoomView.center.y && percentComplete > 0.01 && percentComplete < 1.0 {
+            if  percentComplete > 0.01 && percentComplete < 1.0 {
                 self.view.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1 - percentComplete)
                 zoomView.imageView.transform = CGAffineTransform.init(scaleX: 1 - percentComplete, y: 1 - percentComplete)
             }
