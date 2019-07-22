@@ -26,6 +26,7 @@ class SLPictureZoomView: UIScrollView {
         return imageView
     }()
     var indicatorView: UIActivityIndicatorView?
+    var imageViewCenter: CGPoint? //原来的坐标中心
     //图片正常尺寸 默认
     var imageNormalSize:CGSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.width)
     
@@ -45,7 +46,11 @@ class SLPictureZoomView: UIScrollView {
         self.addSubview(self.imageView)
     }
     func setImage(picUrl:String) {
+        //重置
         imageView.image = nil
+        self.imageView.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.width);
+        self.imageView.center = CGPoint(x: UIScreen.main.bounds.size.width/2.0, y: UIScreen.main.bounds.size.height/2.0)
+        imageViewCenter = self.imageView.center
         //URL编码
         let encodingStr = picUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         let imageUrl = URL(string:encodingStr!)
@@ -79,6 +84,7 @@ class SLPictureZoomView: UIScrollView {
                 if((weakSelf?.imageNormalSize.height)! <= UIScreen.main.bounds.size.height) {
                     weakSelf?.imageView.center = CGPoint(x: UIScreen.main.bounds.size.width/2.0, y: UIScreen.main.bounds.size.height/2.0)
                 }
+                weakSelf?.imageViewCenter = weakSelf?.imageView.center
                 weakSelf?.imageView.image = image
                 //淡出动画
                 if value.cacheType == CacheType.none {
@@ -91,8 +97,6 @@ class SLPictureZoomView: UIScrollView {
             case .failure(let error):
                 let failImage = UIImage(named: "placeholderImage")!
                 weakSelf?.imageView.image = failImage
-                weakSelf?.imageView.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.width);
-                weakSelf?.imageView.center = CGPoint(x: UIScreen.main.bounds.size.width/2.0, y: UIScreen.main.bounds.size.height/2.0)
                 print(error)
             }
             weakSelf?.indicatorView?.stopAnimating()
@@ -105,6 +109,13 @@ class SLPictureZoomView: UIScrollView {
 
 // MARK: UIScrollViewDelegate
 extension SLPictureZoomView: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+//                if scrollView.contentOffset.y < 0 {
+//                    scrollView.isScrollEnabled = false
+//                }else {
+//                    scrollView.isScrollEnabled = true
+//                }
+    }
     //返回缩放视图
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return self.imageView;
@@ -132,3 +143,17 @@ extension SLPictureZoomView: UIScrollViewDelegate {
     }
     
 }
+
+//extension SLPictureZoomView: UIGestureRecognizerDelegate {
+//    
+//    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+//        if otherGestureRecognizer.isKind(of: UIPanGestureRecognizer.self) {
+//                        if (otherGestureRecognizer.view?.isKind(of: UIScrollView.self))! {
+//                            if self.contentOffset.y < 0 {
+//                               return true
+//                            }
+//                        }
+//        }
+//        return false
+//    }
+//}

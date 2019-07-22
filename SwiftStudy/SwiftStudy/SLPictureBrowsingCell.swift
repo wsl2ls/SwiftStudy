@@ -14,6 +14,7 @@ class SLPictureBrowsingCell: UICollectionViewCell {
     //缩放视图
     lazy var pictureZoomView: SLPictureZoomView = {
         let pictureZoomView = SLPictureZoomView()
+        pictureZoomView.backgroundColor = UIColor.clear
         return pictureZoomView
     }()
     
@@ -26,6 +27,7 @@ class SLPictureBrowsingCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     func setupUI() {
+        
         self.contentView.addSubview(self.pictureZoomView)
         self.pictureZoomView.snp.remakeConstraints { (make) in
             make.centerY.equalToSuperview()

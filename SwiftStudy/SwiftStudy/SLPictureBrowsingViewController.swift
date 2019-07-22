@@ -27,6 +27,7 @@ class SLPictureBrowsingViewController: UIViewController {
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.isPagingEnabled = true
+        collectionView.backgroundColor = UIColor.clear
         collectionView.register(SLPictureBrowsingCell.self, forCellWithReuseIdentifier: "ImageCellId")
         return collectionView
     }()
@@ -74,6 +75,7 @@ class SLPictureBrowsingViewController: UIViewController {
     
     // MARK: UI
     func setupUI() {
+        self.view.backgroundColor = UIColor.black
         self.view.clipsToBounds = true;
         self.view.addSubview(self.collectionView)
         self.collectionView.snp.makeConstraints { (make) in
@@ -91,6 +93,54 @@ class SLPictureBrowsingViewController: UIViewController {
         }
         self.pageControl.numberOfPages = imagesArray.count
         self.pageControl.currentPage = currentPage
+        
+        self.view.isUserInteractionEnabled = true;
+        let pan:UIPanGestureRecognizer = UIPanGestureRecognizer.init(target: self, action: #selector(panPicture(pan:)))
+        self.view.addGestureRecognizer(pan)
+    }
+    
+    //MARK: Events Handle
+    @objc func panPicture(pan: UIPanGestureRecognizer) {
+        let cell:SLPictureBrowsingCell = (collectionView.cellForItem(at: IndexPath(row: currentPage, section: 0)) as? SLPictureBrowsingCell)!
+        let zoomView: SLPictureZoomView = cell.pictureZoomView
+        let translation = pan.translation(in: zoomView)
+        zoomView.imageView.center = CGPoint(x: zoomView.imageView.center.x + translation.x, y: zoomView.imageView.center.y + translation.y)
+        pan.setTranslation(CGPoint.zero, in: cell)
+        //滑动的百分比
+        var percentComplete:CGFloat = 0.0
+        percentComplete = (zoomView.imageView.center.y - zoomView.center.y)/(zoomView.frame.height/2.0)
+        percentComplete = abs(percentComplete);
+        
+        switch (pan.state) {
+        case .began:
+            pageControl.isHidden = true
+            break
+        case .changed:
+            if zoomView.imageView.center.y > zoomView.center.y && percentComplete > 0.01 && percentComplete < 1.0 {
+                self.view.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1 - percentComplete)
+                zoomView.imageView.transform = CGAffineTransform.init(scaleX: 1 - percentComplete, y: 1 - percentComplete)
+            }
+            break
+        case .ended:
+            if percentComplete >= 0.5 {
+                self.dismiss(animated: true, completion: nil)
+            }else {
+                self.view.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
+                UIView.animate(withDuration: 0.3, animations: {
+                    zoomView.imageView.center = zoomView.imageViewCenter!
+                    zoomView.imageView.transform = CGAffineTransform.init(scaleX: 1, y: 1)
+                }) { (finished) in
+                    self.pageControl.isHidden = false
+                }
+            }
+            break
+        case .cancelled:
+            break
+        default:
+            break
+        }
+        
+        print("拖拽来了")
     }
     
     // MARK: HelpMethods

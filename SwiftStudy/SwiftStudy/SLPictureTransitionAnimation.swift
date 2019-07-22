@@ -83,12 +83,18 @@ extension SLPictureTransitionAnimation : UIViewControllerAnimatedTransitioning {
         let fromView: UIView = transitionContext.view(forKey: UITransitionContextViewKey.from)!
         fromView.isHidden = true
         let containerView: UIView = transitionContext.containerView;
-         containerView.addSubview(fromAnimatonView!)
+        //黑色背景视图
+        let bgView: UIView = UIView.init(frame: CGRect(x: 0, y: 0, width: containerView.frame.size.width, height: containerView.frame.size.height));
+        bgView.backgroundColor = fromView.backgroundColor
+        containerView.addSubview(bgView)
+        containerView.addSubview(fromAnimatonView!)
         //动画
         UIView.animate(withDuration: self.transitionDuration(using: transitionContext), animations: {
             self.fromAnimatonView?.frame = self.toAnimatonView!.frame
             self.fromAnimatonView?.layer.contentsRect = self.toAnimatonView!.layer.contentsRect
+            bgView.alpha = 0;
         }) { (finished) in
+            bgView.removeFromSuperview()
             self.fromAnimatonView?.removeFromSuperview()
             transitionContext.completeTransition(true)
         }
