@@ -13,12 +13,7 @@ let KPictureSpace:CGFloat = 8  // 图片间隔
 
 //图集浏览控制器
 class SLPictureBrowsingViewController: UIViewController {
-    //隐藏状态栏
-    override var prefersStatusBarHidden: Bool {
-        get {
-            return true
-        }
-    }
+
     lazy var collectionView: UICollectionView = {
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.scrollDirection = UICollectionView.ScrollDirection.horizontal;
@@ -64,13 +59,13 @@ class SLPictureBrowsingViewController: UIViewController {
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        let navigationController: SLNavigationController = (UIApplication.shared.keyWindow?.rootViewController)! as! SLNavigationController
-        navigationController.isStatusBarHidden = true
+        let vc: ViewController = self.fromViewController!
+        vc.isStatusBarHidden = true
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        let navigationController: SLNavigationController = (UIApplication.shared.keyWindow?.rootViewController)! as! SLNavigationController
-        navigationController.isStatusBarHidden = false
+        let vc: ViewController = self.fromViewController!
+        vc.isStatusBarHidden = false
     }
     
     // MARK: UI
@@ -114,6 +109,7 @@ class SLPictureBrowsingViewController: UIViewController {
         switch (pan.state) {
         case .began:
             pageControl.isHidden = true
+            self.fromViewController?.isStatusBarHidden = false
             break
         case .changed:
             if zoomView.imageView.center.y > zoomView.center.y && percentComplete > 0.01 && percentComplete < 1.0 {
@@ -131,6 +127,7 @@ class SLPictureBrowsingViewController: UIViewController {
                     zoomView.imageView.transform = CGAffineTransform.init(scaleX: 1, y: 1)
                 }) { (finished) in
                     self.pageControl.isHidden = false
+                    self.fromViewController?.isStatusBarHidden = true
                 }
             }
             break

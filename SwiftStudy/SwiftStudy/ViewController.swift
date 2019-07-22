@@ -14,7 +14,17 @@ import GDPerformanceView_Swift
 import Kingfisher
 
 class ViewController: UIViewController {
-    
+    //隐藏状态栏
+    var isStatusBarHidden = false {
+        didSet {
+            self.setNeedsStatusBarAppearanceUpdate()
+        }
+    }
+    override var prefersStatusBarHidden: Bool {
+        get {
+            return isStatusBarHidden
+        }
+    }
     //懒加载
     lazy var tableView : UITableView = {
         let tableView = UITableView(frame: CGRect.zero, style: UITableView.Style.grouped)
