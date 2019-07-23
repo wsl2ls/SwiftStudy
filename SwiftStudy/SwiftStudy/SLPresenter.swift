@@ -106,7 +106,7 @@ class SLPresenter: NSObject{
             attchimage.bounds = CGRect.init(x: 0, y: -2, width: 16, height: 16)
             let replaceStr : NSMutableAttributedString = NSMutableAttributedString(attachment: attchimage)
             replaceStr.append(NSAttributedString.init(string: "查看图片")) //添加描述
-            replaceStr.addAttributes([NSAttributedString.Key.link :"http://image.yy.com/yywebalbumbs2bucket/af47c6400efd4ae181e8abb667bcabdd_1444228772233.gif"], range: NSRange(location: 0, length:replaceStr.length ))
+            replaceStr.addAttributes([NSAttributedString.Key.link :"http://img.wxcha.com/file/201811/21/afe8559b5e.gif"], range: NSRange(location: 0, length:replaceStr.length ))
             //注意：涉及到文本替换的 ，每替换一次，原有的富文本位置发生改变，下一轮替换的起点需要重新计算！
             let newLocation = range.location - (titleRange.length - attributedString.length)
             //图标+描述 替换HTTP链接字符
@@ -220,6 +220,7 @@ class SLPresenter: NSObject{
 
 // MARK: SLTableViewCellDelegate
 extension SLPresenter : SLTableViewCellDelegate {
+    //富文本点击跳转事件
     func tableViewCell(_ tableViewCell: SLTableViewCell, clickedLinks url: String, characterRange: NSRange, linkType: SLTextLinkType.RawValue, indexPath: IndexPath) {
         if linkType == SLTextLinkType.Webpage.rawValue {
             
@@ -230,6 +231,11 @@ extension SLPresenter : SLTableViewCellDelegate {
             let selectedRange: UITextRange = tableViewCell.textView.textRange(from: startPosition, to: endPosition)!
             //选中的文本在textViewd上的坐标
             let rect: CGRect = tableViewCell.textView.firstRect(for: selectedRange)
+            
+            let pictureBrowsingViewController:SLPictureBrowsingViewController = SLPictureBrowsingViewController.init()
+            let navigationController: SLNavigationController = (UIApplication.shared.keyWindow?.rootViewController)! as! SLNavigationController
+            pictureBrowsingViewController.imagesArray = [url]
+            navigationController.topViewController?.present(pictureBrowsingViewController, animated: true, completion: nil)
             print(rect)
         } else if linkType == SLTextLinkType.FullText.rawValue {
             let model: SLModel = self.dataArray[indexPath.row] as! SLModel

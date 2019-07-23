@@ -48,6 +48,7 @@ class SLPictureZoomView: UIScrollView {
     func setImage(picUrl:String) {
         //重置
         imageView.image = nil
+        imageView.frame = CGRect.zero
         //URL编码
         let encodingStr = picUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         let imageUrl = URL(string:encodingStr!)
@@ -91,6 +92,8 @@ class SLPictureZoomView: UIScrollView {
                     weakSelf?.imageView.layer.add(fadeTransition, forKey: "contents")
                 }
             case .failure(let error):
+                 weakSelf?.imageView.frame = CGRect(x: 0, y: 0, width: (weakSelf?.imageNormalSize.width)!, height: (weakSelf?.imageNormalSize.height)!);
+                 weakSelf?.imageView.center = CGPoint(x: UIScreen.main.bounds.size.width/2.0, y: UIScreen.main.bounds.size.height/2.0)
                 let failImage = UIImage(named: "placeholderImage")!
                 weakSelf?.imageView.image = failImage
                 print(error)

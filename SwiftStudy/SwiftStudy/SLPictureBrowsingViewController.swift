@@ -40,7 +40,7 @@ class SLPictureBrowsingViewController: UIViewController {
     var imagesArray: [String]  = []
     var currentPage: Int = 0   //当前图片页码
     var fromViewController: ViewController? //界面来源
-    var currentIndexPath: IndexPath?  //当前数据来源
+    var currentIndexPath: IndexPath = IndexPath(row: 0, section: 0)  //当前数据来源
     
     // MARK: Override
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -93,8 +93,10 @@ class SLPictureBrowsingViewController: UIViewController {
             make.centerX.equalToSuperview()
             make.bottom.equalToSuperview().offset(-49)
         }
-        self.pageControl.numberOfPages = imagesArray.count
-        self.pageControl.currentPage = currentPage
+        if imagesArray.count > 1 {
+            self.pageControl.numberOfPages = imagesArray.count
+            self.pageControl.currentPage = currentPage
+        }
         //添加拖拽动画手势
         self.view.isUserInteractionEnabled = true;
         let pan:UIPanGestureRecognizer = UIPanGestureRecognizer.init(target: self, action: #selector(panPicture(pan:)))
@@ -149,7 +151,7 @@ class SLPictureBrowsingViewController: UIViewController {
     //返回上一级页面用于转场动画的视图
     func previousAnimatonView() -> UIView {
         if fromViewController!.isKind(of: ViewController.self) {
-            let tableViewCell: SLTableViewCell = fromViewController!.tableView.cellForRow(at: currentIndexPath!) as! SLTableViewCell
+            let tableViewCell: SLTableViewCell = fromViewController!.tableView.cellForRow(at: currentIndexPath) as! SLTableViewCell
             let imageView: AnimatedImageView = tableViewCell.picsArray[currentPage]
             let tempView: AnimatedImageView = AnimatedImageView()
             tempView.image = imageView.image
