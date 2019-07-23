@@ -13,7 +13,7 @@ let KPictureSpace:CGFloat = 8  // 图片间隔
 
 //图集浏览控制器
 class SLPictureBrowsingViewController: UIViewController {
-
+    
     lazy var collectionView: UICollectionView = {
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.scrollDirection = UICollectionView.ScrollDirection.horizontal;
@@ -59,13 +59,20 @@ class SLPictureBrowsingViewController: UIViewController {
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        //普通机型此方法有效 IPhoneX系列上无效？
         let vc: ViewController = self.fromViewController!
         vc.isStatusBarHidden = true
+        //IPhoneX系列此方法有效 普通机型上无效？
+        let naVC:SLNavigationController = self.fromViewController?.navigationController as! SLNavigationController
+        naVC.isStatusBarHidden = true
+        
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         let vc: ViewController = self.fromViewController!
         vc.isStatusBarHidden = false
+        let naVC:SLNavigationController = self.fromViewController?.navigationController as! SLNavigationController
+        naVC.isStatusBarHidden = false
     }
     
     // MARK: UI
@@ -88,45 +95,44 @@ class SLPictureBrowsingViewController: UIViewController {
         }
         self.pageControl.numberOfPages = imagesArray.count
         self.pageControl.currentPage = currentPage
-        
+        //添加拖拽动画手势
         self.view.isUserInteractionEnabled = true;
         let pan:UIPanGestureRecognizer = UIPanGestureRecognizer.init(target: self, action: #selector(panPicture(pan:)))
         self.view.addGestureRecognizer(pan)
     }
     
     //MARK: Events Handle
+    //拖拽动画
     @objc func panPicture(pan: UIPanGestureRecognizer) {
         let cell:SLPictureBrowsingCell = (collectionView.cellForItem(at: IndexPath(row: currentPage, section: 0)) as? SLPictureBrowsingCell)!
         let zoomView: SLPictureZoomView = cell.pictureZoomView
         let translation = pan.translation(in: zoomView)
-        zoomView.imageView.center = CGPoint(x: zoomView.imageView.center.x + translation.x, y: zoomView.imageView.center.y + translation.y)
+        zoomView.center = CGPoint(x: zoomView.center.x + translation.x, y: zoomView.center.y + translation.y)
         pan.setTranslation(CGPoint.zero, in: cell)
         //滑动的百分比
         var percentComplete:CGFloat = 0.0
-        percentComplete = (zoomView.imageView.center.y - zoomView.center.y)/(zoomView.frame.height/2.0)
+        percentComplete = (zoomView.center.y - UIScreen.main.bounds.size.height/2.0)/(UIScreen.main.bounds.size.height/2.0)
         percentComplete = abs(percentComplete);
         
         switch (pan.state) {
         case .began:
-            pageControl.isHidden = true
             self.fromViewController?.isStatusBarHidden = false
             break
         case .changed:
-            if  percentComplete > 0.01 && percentComplete < 1.0 {
+            if  zoomView.center.y > UIScreen.main.bounds.size.height/2.0 && percentComplete > 0.01 && percentComplete < 1.0 {
                 self.view.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1 - percentComplete)
-                zoomView.imageView.transform = CGAffineTransform.init(scaleX: 1 - percentComplete, y: 1 - percentComplete)
+                zoomView.transform = CGAffineTransform.init(scaleX: 1 - percentComplete/2.0, y: 1 - percentComplete/2.0)
             }
             break
         case .ended:
-            if percentComplete >= 0.5 {
+            if percentComplete >= 0.5 && zoomView.center.y > UIScreen.main.bounds.size.height/2.0 {
                 self.dismiss(animated: true, completion: nil)
             }else {
                 self.view.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
                 UIView.animate(withDuration: 0.3, animations: {
-                    zoomView.imageView.center = zoomView.imageViewCenter!
-                    zoomView.imageView.transform = CGAffineTransform.init(scaleX: 1, y: 1)
+                    zoomView.center = CGPoint(x: (UIScreen.main.bounds.size.width+KPictureSpace * 2)/2.0, y: UIScreen.main.bounds.size.height/2.0)
+                    zoomView.transform = CGAffineTransform.init(scaleX: 1, y: 1)
                 }) { (finished) in
-                    self.pageControl.isHidden = false
                     self.fromViewController?.isStatusBarHidden = true
                 }
             }
@@ -136,7 +142,6 @@ class SLPictureBrowsingViewController: UIViewController {
         default:
             break
         }
-        
         print("拖拽来了")
     }
     
@@ -184,6 +189,7 @@ extension SLPictureBrowsingViewController : UICollectionViewDelegate, UICollecti
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell:SLPictureBrowsingCell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCellId", for: indexPath) as! SLPictureBrowsingCell
+        cell.backgroundColor = UIColor.clear
         cell.reloadData(picUrl: self.imagesArray[indexPath.row])
         return cell
     }
@@ -191,7 +197,7 @@ extension SLPictureBrowsingViewController : UICollectionViewDelegate, UICollecti
         self.dismiss(animated: true, completion: nil)
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: self.view.frame.size.width + 2 * KPictureSpace, height: self.view.frame.size.height)
+        return CGSize(width: UIScreen.main.bounds.size.width + 2 * KPictureSpace, height: UIScreen.main.bounds.size.height)
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)

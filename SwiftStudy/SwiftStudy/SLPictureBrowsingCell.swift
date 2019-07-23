@@ -27,7 +27,6 @@ class SLPictureBrowsingCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     func setupUI() {
-        
         self.contentView.addSubview(self.pictureZoomView)
         self.pictureZoomView.snp.remakeConstraints { (make) in
             make.centerY.equalToSuperview()

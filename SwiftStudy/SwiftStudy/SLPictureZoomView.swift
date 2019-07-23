@@ -43,6 +43,7 @@ class SLPictureZoomView: UIScrollView {
         self.contentInsetAdjustmentBehavior = UIScrollView.ContentInsetAdjustmentBehavior.never
         self.minimumZoomScale = 1.0
         self.maximumZoomScale = 2.0
+        self.clipsToBounds = false
         self.addSubview(self.imageView)
     }
     func setImage(picUrl:String) {
@@ -110,11 +111,11 @@ class SLPictureZoomView: UIScrollView {
 // MARK: UIScrollViewDelegate
 extension SLPictureZoomView: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//                if scrollView.contentOffset.y < 0 {
-//                    scrollView.isScrollEnabled = false
-//                }else {
-//                    scrollView.isScrollEnabled = true
-//                }
+        //                if scrollView.contentOffset.y < 0 {
+        //                    scrollView.isScrollEnabled = false
+        //                }else {
+        //                    scrollView.isScrollEnabled = true
+        //                }
     }
     //返回缩放视图
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
