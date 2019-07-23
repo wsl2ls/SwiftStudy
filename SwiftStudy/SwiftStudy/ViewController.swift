@@ -83,7 +83,7 @@ class ViewController: UIViewController {
         }
     }
     func setupUI() {
-        self.navigationItem.title = "Swift Study"
+        self.navigationItem.title = "One Piece"
         self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: "ClearCache", style: UIBarButtonItem.Style.done, target: self, action: #selector(clearCache))
         self.view.addSubview(self.tableView)
     }

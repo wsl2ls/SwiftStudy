@@ -142,7 +142,7 @@ class SLPictureBrowsingViewController: UIViewController {
         default:
             break
         }
-        print("拖拽来了")
+//        print("拖拽来了")
     }
     
     // MARK: HelpMethods
