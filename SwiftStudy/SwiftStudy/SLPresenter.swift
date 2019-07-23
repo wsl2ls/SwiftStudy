@@ -207,7 +207,12 @@ class SLPresenter: NSObject{
             return 0
         } else {
             let picHeight = (UIScreen.main.bounds.size.width - 15 * 2 - 5 * 2)/3
-            let height = ((images.count - 1)/3 + 1) * Int(picHeight) + (images.count - 1)/3 * 5 + 15
+            var height = 0
+            if images.count < 5 {
+               height = ((images.count - 1)/2 + 1) * Int(picHeight) + (images.count - 1)/2 * 5 + 15
+            }else {
+               height = ((images.count - 1)/3 + 1) * Int(picHeight) + (images.count - 1)/3 * 5 + 15
+            }
             return CGFloat(height);
         }
     }

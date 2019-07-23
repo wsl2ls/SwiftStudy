@@ -26,7 +26,6 @@ class SLPictureZoomView: UIScrollView {
         return imageView
     }()
     var indicatorView: UIActivityIndicatorView?
-    var imageViewCenter: CGPoint? //原来的坐标中心
     //图片正常尺寸 默认
     var imageNormalSize:CGSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.width)
     
@@ -49,9 +48,6 @@ class SLPictureZoomView: UIScrollView {
     func setImage(picUrl:String) {
         //重置
         imageView.image = nil
-        self.imageView.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.width);
-        self.imageView.center = CGPoint(x: UIScreen.main.bounds.size.width/2.0, y: UIScreen.main.bounds.size.height/2.0)
-        imageViewCenter = self.imageView.center
         //URL编码
         let encodingStr = picUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         let imageUrl = URL(string:encodingStr!)
@@ -84,8 +80,7 @@ class SLPictureZoomView: UIScrollView {
                 weakSelf?.contentSize =  weakSelf!.imageNormalSize
                 if((weakSelf?.imageNormalSize.height)! <= UIScreen.main.bounds.size.height) {
                     weakSelf?.imageView.center = CGPoint(x: UIScreen.main.bounds.size.width/2.0, y: UIScreen.main.bounds.size.height/2.0)
-                }
-                weakSelf?.imageViewCenter = weakSelf?.imageView.center
+                }            
                 weakSelf?.imageView.image = image
                 //淡出动画
                 if value.cacheType == CacheType.none {

@@ -160,16 +160,26 @@ class SLTableViewCell: UITableViewCell {
         self.timeLabel.text =  model.time! + " 来自 " + model.source!
         self.followBtn.setTitle("      关注     ", for: UIControl.State.normal)
         self.textView.attributedText = layout?.attributedString
+        //图片宽、高
+        let width: CGFloat = (UIScreen.main.bounds.size.width - 15 * 2 - 5 * 2)/3
+        let height: CGFloat = width
         for (index, imageView) in self.picsArray.enumerated() {
             if model.images.count > index {
                 imageView.isHidden = false
-                let width = (UIScreen.main.bounds.size.width - 15 * 2 - 5 * 2)/3
-                let height = width
-                imageView.snp.remakeConstraints { (make) in
-                    make.top.equalTo(self.textView.snp.bottom).offset(15 + (index/3) * Int(height + 5))
-                    make.left.equalTo(15 + (index%3) * Int(width + 5))
-                    make.width.height.equalTo(height)
+                if model.images.count < 5 {
+                    imageView.snp.remakeConstraints { (make) in
+                        make.top.equalTo(self.textView.snp.bottom).offset(15 + (index/2) * Int(height + 5))
+                        make.left.equalTo(15 + (index%2) * Int(width + 5))
+                        make.width.height.equalTo(height)
+                    }
+                }else {
+                    imageView.snp.remakeConstraints { (make) in
+                        make.top.equalTo(self.textView.snp.bottom).offset(15 + (index/3) * Int(height + 5))
+                        make.left.equalTo(15 + (index%3) * Int(width + 5))
+                        make.width.height.equalTo(height)
+                    }
                 }
+                
                 //URL编码
                 let encodingStr = model.images[index].addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
                 let imageUrl = URL(string:encodingStr!)

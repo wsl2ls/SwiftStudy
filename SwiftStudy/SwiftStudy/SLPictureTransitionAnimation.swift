@@ -15,6 +15,7 @@ enum SLTransitionType: Int {
     case Present
     case Dissmiss
 }
+let duration: TimeInterval = 0.3 //动画时长
 
 class SLPictureTransitionAnimation: NSObject {
     var transitionType:SLTransitionType = SLTransitionType.Push
@@ -26,7 +27,7 @@ class SLPictureTransitionAnimation: NSObject {
 extension SLPictureTransitionAnimation : UIViewControllerAnimatedTransitioning {
     //返回动画时间
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 0.3;
+        return duration;
     }
     //所有的过渡动画事务都在这个代理方法里面完成
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {

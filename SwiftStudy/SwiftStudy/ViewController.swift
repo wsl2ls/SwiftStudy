@@ -30,7 +30,7 @@ class ViewController: UIViewController {
         let tableView = UITableView(frame: CGRect.zero, style: UITableView.Style.grouped)
         tableView.delegate = self
         tableView.dataSource = self
-        //        tableView.contentInsetAdjustmentBehavior = UIScrollView.ContentInsetAdjustmentBehavior.never
+        tableView.contentInsetAdjustmentBehavior = UIScrollView.ContentInsetAdjustmentBehavior.never
         //        tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
         tableView.estimatedRowHeight = 0
         tableView.estimatedSectionFooterHeight = 0
@@ -71,15 +71,21 @@ class ViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     }
+    //安全距离什么时候被改变
+    override func viewSafeAreaInsetsDidChange() {
+        // 考虑安全距离
+        let insets: UIEdgeInsets = self.view.safeAreaInsets
+        print(insets)
+        self.tableView.snp.makeConstraints { (make) in
+            make.left.right.equalToSuperview()
+            make.top.equalToSuperview().offset(insets.top)
+            make.bottom.equalToSuperview()
+        }
+    }
     func setupUI() {
         self.navigationItem.title = "Swift Study"
         self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: "ClearCache", style: UIBarButtonItem.Style.done, target: self, action: #selector(clearCache))
         self.view.addSubview(self.tableView)
-        self.tableView.snp.makeConstraints { (make) in
-            make.left.right.equalToSuperview()
-            make.top.equalToSuperview()
-            make.height.equalToSuperview()
-        }
     }
     
     // MARK: Events
