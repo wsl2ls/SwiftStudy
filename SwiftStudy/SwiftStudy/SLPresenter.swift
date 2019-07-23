@@ -106,7 +106,7 @@ class SLPresenter: NSObject{
             attchimage.bounds = CGRect.init(x: 0, y: -2, width: 16, height: 16)
             let replaceStr : NSMutableAttributedString = NSMutableAttributedString(attachment: attchimage)
             replaceStr.append(NSAttributedString.init(string: "查看图片")) //添加描述
-            replaceStr.addAttributes([NSAttributedString.Key.link :"http://b-ssl.duitang.com/uploads/item/201601/15/20160115140217_HeJAm.jpeg"], range: NSRange(location: 0, length:replaceStr.length ))
+            replaceStr.addAttributes([NSAttributedString.Key.link :"http://image.yy.com/yywebalbumbs2bucket/af47c6400efd4ae181e8abb667bcabdd_1444228772233.gif"], range: NSRange(location: 0, length:replaceStr.length ))
             //注意：涉及到文本替换的 ，每替换一次，原有的富文本位置发生改变，下一轮替换的起点需要重新计算！
             let newLocation = range.location - (titleRange.length - attributedString.length)
             //图标+描述 替换HTTP链接字符
@@ -209,9 +209,9 @@ class SLPresenter: NSObject{
             let picHeight = (UIScreen.main.bounds.size.width - 15 * 2 - 5 * 2)/3
             var height = 0
             if images.count < 5 {
-               height = ((images.count - 1)/2 + 1) * Int(picHeight) + (images.count - 1)/2 * 5 + 15
+                height = ((images.count - 1)/2 + 1) * Int(picHeight) + (images.count - 1)/2 * 5 + 15
             }else {
-               height = ((images.count - 1)/3 + 1) * Int(picHeight) + (images.count - 1)/3 * 5 + 15
+                height = ((images.count - 1)/3 + 1) * Int(picHeight) + (images.count - 1)/3 * 5 + 15
             }
             return CGFloat(height);
         }
@@ -220,6 +220,30 @@ class SLPresenter: NSObject{
 
 // MARK: SLTableViewCellDelegate
 extension SLPresenter : SLTableViewCellDelegate {
+    func tableViewCell(_ tableViewCell: SLTableViewCell, clickedLinks url: String, characterRange: NSRange, linkType: SLTextLinkType.RawValue, indexPath: IndexPath) {
+        if linkType == SLTextLinkType.Webpage.rawValue {
+            
+        }else  if linkType == SLTextLinkType.Picture.rawValue {
+            let beginning: UITextPosition = tableViewCell.textView.beginningOfDocument;
+            let startPosition: UITextPosition = tableViewCell.textView.position(from: beginning, offset: characterRange.location)!
+            let endPosition: UITextPosition = tableViewCell.textView.position(from: beginning, offset: characterRange.location + characterRange.length)!
+            let selectedRange: UITextRange = tableViewCell.textView.textRange(from: startPosition, to: endPosition)!
+            //选中的文本在textViewd上的坐标
+            let rect: CGRect = tableViewCell.textView.firstRect(for: selectedRange)
+            print(rect)
+        } else if linkType == SLTextLinkType.FullText.rawValue {
+            let model: SLModel = self.dataArray[indexPath.row] as! SLModel
+            var layout: SLLayout = self.layoutArray[indexPath.row] as! SLLayout
+            layout.expan = !layout.expan
+            //元组
+            let attStrAndHeight:(attributedString:NSMutableAttributedString, height:CGFloat) = self.matchesResultOfTitle(title: model.title!, expan: layout.expan)
+            layout.attributedString = attStrAndHeight.attributedString
+            layout.cellHeight = (15 + 35 + 15 + attStrAndHeight.height + 15 + self.heightOfImages(images: model.images))
+            self.layoutArray.replaceObject(at: indexPath.row, with: layout)
+            self.fullTextBlock!(indexPath)
+        }
+    }
+    
     //图片点击
     func tableViewCell(_ tableViewCell: SLTableViewCell, tapImageAction indexOfImages: NSInteger, indexPath: IndexPath) {
         let pictureBrowsingViewController:SLPictureBrowsingViewController = SLPictureBrowsingViewController.init()
@@ -230,18 +254,6 @@ extension SLPresenter : SLTableViewCellDelegate {
         pictureBrowsingViewController.currentPage = indexOfImages
         pictureBrowsingViewController.currentIndexPath = indexPath
         navigationController.topViewController?.present(pictureBrowsingViewController, animated: true, completion: nil)
-    }
-    //全文展开、收起
-    func fullTextAction(characterRange: NSRange, indexPath: IndexPath) {
-        let model: SLModel = self.dataArray[indexPath.row] as! SLModel
-        var layout: SLLayout = self.layoutArray[indexPath.row] as! SLLayout
-        layout.expan = !layout.expan
-        //元组
-        let attStrAndHeight:(attributedString:NSMutableAttributedString, height:CGFloat) = self.matchesResultOfTitle(title: model.title!, expan: layout.expan)
-        layout.attributedString = attStrAndHeight.attributedString
-        layout.cellHeight = (15 + 35 + 15 + attStrAndHeight.height + 15 + self.heightOfImages(images: model.images))
-        self.layoutArray.replaceObject(at: indexPath.row, with: layout)
-        self.fullTextBlock!(indexPath)
     }
 }
 

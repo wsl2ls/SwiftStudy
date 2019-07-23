@@ -80,7 +80,7 @@ class SLPictureZoomView: UIScrollView {
                 weakSelf?.contentSize =  weakSelf!.imageNormalSize
                 if((weakSelf?.imageNormalSize.height)! <= UIScreen.main.bounds.size.height) {
                     weakSelf?.imageView.center = CGPoint(x: UIScreen.main.bounds.size.width/2.0, y: UIScreen.main.bounds.size.height/2.0)
-                }            
+                }
                 weakSelf?.imageView.image = image
                 //淡出动画
                 if value.cacheType == CacheType.none {

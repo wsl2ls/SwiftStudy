@@ -9,10 +9,17 @@
 import UIKit
 import Kingfisher
 
+//定义枚举 富文本链接类型
+enum SLTextLinkType: Int {
+    case Webpage
+    case Picture
+    case FullText
+}
+
 //代理方法
 @objc protocol SLTableViewCellDelegate : NSObjectProtocol {
-    func fullTextAction(characterRange: NSRange, indexPath: IndexPath)  //点击全文
     func tableViewCell(_ tableViewCell: SLTableViewCell, tapImageAction indexOfImages:NSInteger, indexPath: IndexPath)  //点击图片
+    func tableViewCell(_ tableViewCell: SLTableViewCell, clickedLinks url:String,  characterRange: NSRange, linkType: SLTextLinkType.RawValue, indexPath: IndexPath)  //点击文本链接
 }
 
 //标题富文本视图
@@ -195,7 +202,7 @@ class SLTableViewCell: UITableViewCell {
                         let image: Image = value.image
                         //                        var data  = Data(contentsOf: imageUrl!)
                         //                        let data = image.kf.gifRepresentation()?.kf.imageFormat
-//                        print("===== \( value.source)")
+                        //                        print("===== \( value.source)")
                         imageView.image = image
                         if (image.size.height/image.size.width > 3) {
                             //大长图 仅展示顶部部分内容
@@ -260,16 +267,23 @@ class SLTableViewCell: UITableViewCell {
 extension SLTableViewCell : UITextViewDelegate {
     //点击链接
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
-        print("点击了：\(textView.attributedText.attributedSubstring(from: characterRange).string) \n    链接值：\(URL.absoluteString) ")
+        let selectdText: String = textView.attributedText.attributedSubstring(from: characterRange).string
+        print("点击了：\(selectdText) \n    链接值：\(URL.absoluteString) ")
+        var linkType: SLTextLinkType = SLTextLinkType.Webpage
         if URL.absoluteString == "FullText" {
-            self.delegate?.fullTextAction(characterRange: characterRange, indexPath: self.cellIndexPath!)
+            linkType = SLTextLinkType.FullText
+        }else if selectdText.hasSuffix("查看图片"){
+            linkType = SLTextLinkType.Picture
+        }else {
+            linkType = SLTextLinkType.Webpage
         }
-        return true
+        self.delegate?.tableViewCell(self, clickedLinks: URL.absoluteString, characterRange: characterRange, linkType: linkType.rawValue, indexPath: self.cellIndexPath!)
+        return false
     }
     //点击富文本附件 图片等
     func textView(_ textView: UITextView, shouldInteractWith textAttachment: NSTextAttachment, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
         print("点击了附件\( NSAttributedString(attachment: textAttachment).string) ")
-        return true
+        return false
     }
 }
 
