@@ -6,6 +6,7 @@ PODS:
   - HandyJSON (5.0.0)
   - Kingfisher (5.5.0)
   - SnapKit (5.0.0)
+  - WKWebView (1.0.2)
 
 DEPENDENCIES:
   - Alamofire (~> 4.8)
@@ -14,6 +15,7 @@ DEPENDENCIES:
   - HandyJSON (~> 5.0.0-beta.1)
   - Kingfisher (~> 5.5.0)
   - SnapKit
+  - WKWebView
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -23,6 +25,8 @@ SPEC REPOS:
     - HandyJSON
     - Kingfisher
     - SnapKit
+  https://github.com/wsl2ls/SLSpecs.git:
+    - WKWebView
 
 SPEC CHECKSUMS:
   Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
@@ -31,7 +35,8 @@ SPEC CHECKSUMS:
   HandyJSON: 992f2d661716d6a91de82d0056927bc7813b5770
   Kingfisher: 6fe5e67a90fd335e49b0f5c075ff55ac5ebedd94
   SnapKit: fd22d10eb9aff484d79a8724eab922c1ddf89bcf
+  WKWebView: 0a0d17744c0fb6c4c7d4ffb88f5dd2a2722b262c
 
-PODFILE CHECKSUM: 73df7b4e939e16c5fb42ae391cdf7d43fdeb503d
+PODFILE CHECKSUM: e1bfe832968db47bf758ab302321cdf92bd932df
 
 COCOAPODS: 1.6.1

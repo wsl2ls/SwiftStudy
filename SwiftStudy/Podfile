@@ -1,3 +1,7 @@
+
+source 'https://github.com/wsl2ls/SLSpecs.git' #私有索引库
+source 'https://github.com/CocoaPods/Specs.git'  #公有索引库
+
 # Uncomment the next line to define a global platform for your project
 platform :ios, '10.0'
 
@@ -12,6 +16,8 @@ target 'SwiftStudy' do
   pod 'Kingfisher', '~> 5.5.0'
   pod 'HandyJSON', '~> 5.0.0-beta.1'
   pod 'GDPerformanceView-Swift', '~> 2.0.2'
+  
+  pod 'WKWebView'  #私有组件索引
   
 end
 
