@@ -109,6 +109,7 @@ class SLPictureZoomView: UIScrollView {
 // MARK: UIScrollViewDelegate
 extension SLPictureZoomView: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
     }
     //返回缩放视图
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
@@ -118,7 +119,7 @@ extension SLPictureZoomView: UIScrollViewDelegate {
 //        print("开始缩放")
 //    }
 //    func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
-//        print("结束缩放")
+//         print("缩放结束")
 //    }
     //缩放过程中
     func scrollViewDidZoom(_ scrollView: UIScrollView) {

@@ -28,6 +28,7 @@ class SLPictureBrowsingViewController: UIViewController {
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.isPagingEnabled = true
+        collectionView.allowsSelection = false
         collectionView.backgroundColor = UIColor.clear
         collectionView.register(SLPictureBrowsingCell.self, forCellWithReuseIdentifier: "ImageCellId")
         return collectionView
@@ -110,14 +111,65 @@ class SLPictureBrowsingViewController: UIViewController {
         self.view.isUserInteractionEnabled = true;
         let pan:UIPanGestureRecognizer = UIPanGestureRecognizer.init(target: self, action: #selector(panPicture(pan:)))
         self.view.addGestureRecognizer(pan)
+        
+        //单击手势  退出浏览
+        let singleTap:UITapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(singleTap(tap:)))
+        singleTap.numberOfTapsRequired = 1
+        singleTap.numberOfTouchesRequired = 1
+        self.view.addGestureRecognizer(singleTap)
+        //双击手势  放大点击点
+        let doubleTap:UITapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(doubleTap(tap:)))
+        doubleTap.numberOfTapsRequired = 2
+        doubleTap.numberOfTouchesRequired = 1
+        self.view.addGestureRecognizer(doubleTap)
+        //只有当doubleTap识别失败的时候(即识别出这不是双击操作)，singleTap才能开始识别
+        singleTap.require(toFail: doubleTap)
     }
     
     //MARK: Events Handle
+    @objc func singleTap(tap: UITapGestureRecognizer) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    //双击放大 以点击点为中心放大
+    @objc func doubleTap(tap: UITapGestureRecognizer) {
+        let cell:SLPictureBrowsingCell = (collectionView.cellForItem(at: IndexPath(row: currentPage, section: 0)) as? SLPictureBrowsingCell)!
+        let zoomView: SLPictureZoomView = cell.pictureZoomView
+        //获得点击的点原始坐标 相对于ImageView
+        let tapPosionOfPicture = tap.location(in: zoomView.imageView)
+        //相对于屏幕的点坐标
+        let tapPosionOfScreen = tap.location(in: zoomView)
+        UIView.animate(withDuration: 0.3, animations: {
+            if(zoomView.zoomScale != 1) {
+                zoomView.zoomScale = 1
+                zoomView.scrollViewDidZoom(zoomView)
+                zoomView.contentOffset = CGPoint.zero
+            }else {
+                //获得点击的点放大后的坐标 相对于ImageView
+                let newTapPosionOfPicture = CGPoint(x: tapPosionOfPicture.x*zoomView.maximumZoomScale, y: tapPosionOfPicture.y*zoomView.maximumZoomScale)
+                zoomView.zoomScale = zoomView.maximumZoomScale
+                zoomView.scrollViewDidZoom(zoomView)
+                if newTapPosionOfPicture.y < tapPosionOfScreen.y {
+                    // 放大后高度还不满一屏
+                    zoomView.contentOffset = CGPoint(x: newTapPosionOfPicture.x - tapPosionOfScreen.x, y: 0)
+                }else {
+                    // 超过一屏幕
+                    if newTapPosionOfPicture.y > zoomView.imageView.frame.size.height -  zoomView.frame.size.height{
+                        // 点击点在最底部一屏中
+                        zoomView.contentOffset = CGPoint(x: newTapPosionOfPicture.x - tapPosionOfScreen.x, y: zoomView.imageView.frame.size.height -  zoomView.frame.size.height)
+                    }else{
+                        //点击点在头部和中间层
+                        zoomView.contentOffset = CGPoint(x: newTapPosionOfPicture.x - tapPosionOfScreen.x, y: newTapPosionOfPicture.y - tapPosionOfScreen.y)
+                    }
+                }
+            }
+        }) { (finished) in
+        }
+    }
     //拖拽动画
     @objc func panPicture(pan: UIPanGestureRecognizer) {
         let cell:SLPictureBrowsingCell = (collectionView.cellForItem(at: IndexPath(row: currentPage, section: 0)) as? SLPictureBrowsingCell)!
         let zoomView: SLPictureZoomView = cell.pictureZoomView
-        let translation = pan.translation(in: zoomView)
+        let translation = pan.translation(in: cell)
         zoomView.center = CGPoint(x: zoomView.center.x + translation.x, y: zoomView.center.y + translation.y)
         pan.setTranslation(CGPoint.zero, in: cell)
         //滑动的百分比
@@ -217,7 +269,7 @@ extension SLPictureBrowsingViewController : UICollectionViewDelegate, UICollecti
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        self.dismiss(animated: true, completion: nil)
+        //        self.dismiss(animated: true, completion: nil)
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: UIScreen.main.bounds.size.width + 2 * KPictureSpace, height: UIScreen.main.bounds.size.height)

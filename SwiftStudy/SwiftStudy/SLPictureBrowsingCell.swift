@@ -38,8 +38,12 @@ class SLPictureBrowsingCell: UICollectionViewCell {
         self.pictureZoomView.isUserInteractionEnabled = false;
         self.contentView.addGestureRecognizer(self.pictureZoomView.panGestureRecognizer)
         self.contentView.addGestureRecognizer(self.pictureZoomView.pinchGestureRecognizer!)
+        
     }
-    // MARK: ReloadData
+    
+    //MARK: Events Handle
+    
+    // MARK: Data
     func reloadData(picUrl:String) {
         self.pictureZoomView.setImage(picUrl: picUrl)
     }
