@@ -194,7 +194,7 @@ class SLTableViewCell: UITableViewCell {
                 let processor = DownsamplingImageProcessor(size: CGSize(width: width, height: width))
                 //性能优化 取消之前的下载任务
                 imageView.kf.cancelDownloadTask()
-                imageView.kf.setImage(with: imageUrl!, placeholder: nil, options: [.processor(processor), .scaleFactor(UIScreen.main.scale), .cacheOriginalImage,] , progressBlock: { (receivedSize, totalSize) in
+                imageView.kf.setImage(with: imageUrl!, placeholder: nil, options: [.processor(processor), .scaleFactor(UIScreen.main.scale), .cacheOriginalImage, .onlyLoadFirstFrame] , progressBlock: { (receivedSize, totalSize) in
                     //下载进度
                 }) { (result) in
                     switch result {

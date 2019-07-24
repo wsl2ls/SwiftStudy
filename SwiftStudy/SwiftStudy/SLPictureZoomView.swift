@@ -109,22 +109,17 @@ class SLPictureZoomView: UIScrollView {
 // MARK: UIScrollViewDelegate
 extension SLPictureZoomView: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        //                if scrollView.contentOffset.y < 0 {
-        //                    scrollView.isScrollEnabled = false
-        //                }else {
-        //                    scrollView.isScrollEnabled = true
-        //                }
     }
     //返回缩放视图
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return self.imageView;
     }
-    func scrollViewWillBeginZooming(_ scrollView: UIScrollView, with view: UIView?) {
-        print("开始缩放")
-    }
-    func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
-        print("结束缩放")
-    }
+//    func scrollViewWillBeginZooming(_ scrollView: UIScrollView, with view: UIView?) {
+//        print("开始缩放")
+//    }
+//    func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
+//        print("结束缩放")
+//    }
     //缩放过程中
     func scrollViewDidZoom(_ scrollView: UIScrollView) {
         // 延中心点缩放

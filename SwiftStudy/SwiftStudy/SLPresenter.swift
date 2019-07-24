@@ -229,12 +229,14 @@ extension SLPresenter : SLTableViewCellDelegate {
             let startPosition: UITextPosition = tableViewCell.textView.position(from: beginning, offset: characterRange.location)!
             let endPosition: UITextPosition = tableViewCell.textView.position(from: beginning, offset: characterRange.location + characterRange.length)!
             let selectedRange: UITextRange = tableViewCell.textView.textRange(from: startPosition, to: endPosition)!
-            //选中的文本在textViewd上的坐标
+            //选中的文本在textViewd上的区域坐标
             let rect: CGRect = tableViewCell.textView.firstRect(for: selectedRange)
-            
             let pictureBrowsingViewController:SLPictureBrowsingViewController = SLPictureBrowsingViewController.init()
             let navigationController: SLNavigationController = (UIApplication.shared.keyWindow?.rootViewController)! as! SLNavigationController
             pictureBrowsingViewController.imagesArray = [url]
+            pictureBrowsingViewController.selectedRect = rect
+            pictureBrowsingViewController.currentIndexPath = indexPath
+            pictureBrowsingViewController.animatonSource = SLAnimatonSource.TextView
             navigationController.topViewController?.present(pictureBrowsingViewController, animated: true, completion: nil)
             print(rect)
         } else if linkType == SLTextLinkType.FullText.rawValue {

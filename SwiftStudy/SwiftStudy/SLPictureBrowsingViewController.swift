@@ -11,6 +11,12 @@ import Kingfisher
 
 let KPictureSpace:CGFloat = 8  // 图片间隔
 
+//定义枚举 转场动画来源
+enum SLAnimatonSource: Int {
+    case Atlas    // 图集
+    case TextView  //查看图片
+}
+
 //图集浏览控制器
 class SLPictureBrowsingViewController: UIViewController {
     
@@ -41,6 +47,9 @@ class SLPictureBrowsingViewController: UIViewController {
     var currentPage: Int = 0   //当前图片页码
     var fromViewController: ViewController? //界面来源
     var currentIndexPath: IndexPath = IndexPath(row: 0, section: 0)  //当前数据来源
+    var animatonSource: SLAnimatonSource = SLAnimatonSource.Atlas  //转场动画来源 是图集还是textView
+    var selectedRect: CGRect = CGRect.zero  //textView上 选中的查看图片文本在textView上的区域 用于转场动画
+    
     
     // MARK: Override
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -152,12 +161,24 @@ class SLPictureBrowsingViewController: UIViewController {
     func previousAnimatonView() -> UIView {
         if fromViewController!.isKind(of: ViewController.self) {
             let tableViewCell: SLTableViewCell = fromViewController!.tableView.cellForRow(at: currentIndexPath) as! SLTableViewCell
-            let imageView: AnimatedImageView = tableViewCell.picsArray[currentPage]
-            let tempView: AnimatedImageView = AnimatedImageView()
-            tempView.image = imageView.image
-            tempView.layer.contentsRect = imageView.layer.contentsRect
-            tempView.frame = imageView.convert(imageView.bounds, to: self.view)
-            return tempView
+            if animatonSource == SLAnimatonSource.Atlas {
+                //图集浏览
+                let imageView: AnimatedImageView = tableViewCell.picsArray[currentPage]
+                let tempView: AnimatedImageView = AnimatedImageView()
+                tempView.image = imageView.image
+                tempView.layer.contentsRect = imageView.layer.contentsRect
+                tempView.frame = imageView.convert(imageView.bounds, to: self.view)
+                return tempView
+            }else {
+                //查看图片
+                let screenRectOfTextView: CGRect = tableViewCell.textView.convert(tableViewCell.textView.bounds, to: self.view)
+                let screenRectOfSelectText: CGRect = CGRect(x: selectedRect.origin.x
+                    + screenRectOfTextView.origin.x, y: selectedRect.origin.y
+                        + screenRectOfTextView.origin.y, width: selectedRect.size.height, height:selectedRect.size.height)
+                let view = self.currentAnimatonView()
+                view.frame = screenRectOfSelectText
+                return view
+            }
         }
         return UIView()
     }
