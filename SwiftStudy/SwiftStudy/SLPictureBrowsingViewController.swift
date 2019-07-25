@@ -148,16 +148,16 @@ class SLPictureBrowsingViewController: UIViewController {
                 let newTapPosionOfPicture = CGPoint(x: tapPosionOfPicture.x*zoomView.maximumZoomScale, y: tapPosionOfPicture.y*zoomView.maximumZoomScale)
                 zoomView.zoomScale = zoomView.maximumZoomScale
                 zoomView.scrollViewDidZoom(zoomView)
-                if newTapPosionOfPicture.y < tapPosionOfScreen.y {
-                    // 放大后高度还不满一屏
+                
+                if newTapPosionOfPicture.y < zoomView.frame.size.height || zoomView.imageView.frame.size.height < zoomView.frame.size.height {
+                    // 放大后对应的点击点在图片上的位置 处在前一屏当中
                     zoomView.contentOffset = CGPoint(x: newTapPosionOfPicture.x - tapPosionOfScreen.x, y: 0)
-                }else {
-                    // 超过一屏幕
+                } else {  // 点击点在图片上的位置超过一屏时
                     if newTapPosionOfPicture.y > zoomView.imageView.frame.size.height -  zoomView.frame.size.height{
-                        // 点击点在最底部一屏中
+                        // 点击点在图片最底部一屏中
                         zoomView.contentOffset = CGPoint(x: newTapPosionOfPicture.x - tapPosionOfScreen.x, y: zoomView.imageView.frame.size.height -  zoomView.frame.size.height)
                     }else{
-                        //点击点在头部和中间层
+                        //点击点在图片中间层
                         zoomView.contentOffset = CGPoint(x: newTapPosionOfPicture.x - tapPosionOfScreen.x, y: newTapPosionOfPicture.y - tapPosionOfScreen.y)
                     }
                 }
