@@ -12,7 +12,7 @@ DEPENDENCIES:
   - Alamofire (~> 4.8)
   - AlamofireImage (~> 3.5)
   - GDPerformanceView-Swift (~> 2.0.2)
-  - HandyJSON (~> 5.0.0-beta.1)
+  - HandyJSON (~> 5.0.0)
   - Kingfisher (~> 5.5.0)
   - SnapKit
   - WKWebView
@@ -37,6 +37,6 @@ SPEC CHECKSUMS:
   SnapKit: fd22d10eb9aff484d79a8724eab922c1ddf89bcf
   WKWebView: 0a0d17744c0fb6c4c7d4ffb88f5dd2a2722b262c
 
-PODFILE CHECKSUM: e1bfe832968db47bf758ab302321cdf92bd932df
+PODFILE CHECKSUM: f042a75e54137ade09c5014e4f4bf4e2b9880d19
 
 COCOAPODS: 1.6.1

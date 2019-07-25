@@ -223,7 +223,10 @@ extension SLPresenter : SLTableViewCellDelegate {
     //富文本点击跳转事件
     func tableViewCell(_ tableViewCell: SLTableViewCell, clickedLinks url: String, characterRange: NSRange, linkType: SLTextLinkType.RawValue, indexPath: IndexPath) {
         if linkType == SLTextLinkType.Webpage.rawValue {
-            
+            let navigationController: SLNavigationController = (UIApplication.shared.keyWindow?.rootViewController)! as! SLNavigationController
+            let WebViewController: SLWebViewController = SLWebViewController()
+            WebViewController.urlStr = url
+            navigationController .pushViewController(WebViewController, animated: true)
         }else  if linkType == SLTextLinkType.Picture.rawValue {
             let beginning: UITextPosition = tableViewCell.textView.beginningOfDocument;
             let startPosition: UITextPosition = tableViewCell.textView.position(from: beginning, offset: characterRange.location)!

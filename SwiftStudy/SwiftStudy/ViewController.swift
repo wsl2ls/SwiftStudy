@@ -47,6 +47,7 @@ class ViewController: UIViewController {
     var dataArray = NSMutableArray()
     var layoutArray = NSMutableArray()
     
+    // MARK: UI
     override func viewDidLoad() {
         super.viewDidLoad()
         //性能监测工具
@@ -67,7 +68,6 @@ class ViewController: UIViewController {
         ImageCache.default.memoryStorage.config.countLimit = 150
         setupUI()
     }
-    // MARK: UI
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     }
