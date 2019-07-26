@@ -34,7 +34,7 @@ class SLPictureBrowsingCell: UICollectionViewCell {
             make.width.equalTo(UIScreen.main.bounds.size.width)
             make.height.equalTo(UIScreen.main.bounds.size.height)
         }
-        //解决 UIScrollView 和UITableViewCell 冲突
+        //解决 self.pictureZoomView 和UICollectionView 手势冲突
         self.pictureZoomView.isUserInteractionEnabled = false;
         self.contentView.addGestureRecognizer(self.pictureZoomView.panGestureRecognizer)
         self.contentView.addGestureRecognizer(self.pictureZoomView.pinchGestureRecognizer!)
