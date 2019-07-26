@@ -1,3 +1,5 @@
+# Swift 小仿微博列表
+
 # 前言
 
 >   &#160; &#160; 鉴于目前Swift的ABI(应用程序二进制接口)、API(应用程序编程接口) 基本稳定，对于Swift的学习有必要提上日程了，这个[Swift仿微博列表](https://github.com/wsl2ls/SwiftStudy.git)的效果是我最近一边学习《[Swift入门到精通-李明杰](https://m.ke.qq.com/m-core/distributionPoster.html?id=392094&isPackage=0&goodRatio=100&token=1693443&from=applink)》 一边练手的[Demo](https://github.com/wsl2ls/SwiftStudy.git)，Swift新手还请关照~🤝
@@ -204,8 +206,6 @@ let proportion: CGFloat = height/(width * image.size.height/image.size.width)
 5、减少视图层级
 6、减少不必要的数据请求
 
-👁**代码传送门**  ——>  [Swift仿微博列表](https://github.com/wsl2ls/SwiftStudy.git)
-
  **推荐阅读**
  [YYKit - iOS 保持界面流畅的技巧](https://blog.ibireme.com/2015/11/12/smooth_user_interfaces_for_ios/)
 [iOS 自定义转场动画](https://www.jianshu.com/p/a9b1307b305b)
@@ -218,3 +218,7 @@ let proportion: CGFloat = height/(width * image.size.height/image.size.width)
 ※ 简书：[https://www.jianshu.com/u/e15d1f644bea](https://www.jianshu.com/u/e15d1f644bea) 
 ※ 微信公众号：iOS2679114653
 ※ QQ：1685527540
+
+欢迎扫描下方二维码关注——iOS开发进阶之路——微信公众号：iOS2679114653 本公众号是一个iOS开发者们的分享，交流，学习平台，会不定时的发送技术干货，源码,也欢迎大家积极踊跃投稿，(择优上头条) ^_^分享自己开发攻城的过程，心得，相互学习，共同进步，成为攻城狮中的翘楚！
+
+![iOS开发进阶之路.jpg](http://upload-images.jianshu.io/upload_images/1708447-c2471528cadd7c86.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
