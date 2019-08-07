@@ -13,7 +13,10 @@
   > **&#160; &#160; 三、界面流畅度优化**
 
 ![富文本点击效果](https://upload-images.jianshu.io/upload_images/1708447-f53ec6751e28437f.gif?imageMogr2/auto-orient/strip)
-![图集浏览效果](https://upload-images.jianshu.io/upload_images/1708447-72cdb0c8cd4e9820.gif?imageMogr2/auto-orient/strip)
+
+*********
+
+![图集浏览效果](SwiftStudy/图集浏览效果.gif)
 
 ##  一、UITextView富文本的实现
 
