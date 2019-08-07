@@ -3,10 +3,14 @@
 # 前言
 
 >   &#160; &#160; 鉴于目前Swift的ABI(应用程序二进制接口)、API(应用程序编程接口) 基本稳定，对于Swift的学习有必要提上日程了，这个[Swift仿微博列表](https://github.com/wsl2ls/SwiftStudy.git)的效果是我最近一边学习《[Swift入门到精通-李明杰](https://m.ke.qq.com/m-core/distributionPoster.html?id=392094&isPackage=0&goodRatio=100&token=1693443&from=applink)》 一边练手的[Demo](https://github.com/wsl2ls/SwiftStudy.git)，Swift新手还请关照~🤝
+
    &#160; &#160;  这个[示例](https://github.com/wsl2ls/SwiftStudy.git)的主要内容有三个方面：
-  **&#160; &#160; 一、UITextView富文本的实现**
-  **&#160; &#160; 二、图片转场和浏览动画**
-  **&#160; &#160; 三、界面流畅度优化**
+   
+  > **&#160; &#160; 一、UITextView富文本的实现**
+  
+  > **&#160; &#160; 二、图片转场和浏览动画**
+  
+  > **&#160; &#160; 三、界面流畅度优化**
 
 ![富文本点击效果](https://upload-images.jianshu.io/upload_images/1708447-f53ec6751e28437f.gif?imageMogr2/auto-orient/strip)
 ![图集浏览效果](https://upload-images.jianshu.io/upload_images/1708447-72cdb0c8cd4e9820.gif?imageMogr2/auto-orient/strip)
